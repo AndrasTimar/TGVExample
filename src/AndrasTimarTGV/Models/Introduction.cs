@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace AndrasTimarTGV.Models
 {
     public enum Language {
-        french = 0,
-        english = 1,
-        dutch = 2
+        fr = 0,
+        en = 1,
+        ne = 2
     }
 
     public class Introduction

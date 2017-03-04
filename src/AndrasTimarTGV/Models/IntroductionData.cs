@@ -23,19 +23,19 @@ namespace AndrasTimarTGV.Models
                         new Introduction
                         {
                             Name = "int-fr",
-                            Language = Language.french,
+                            Language = Language.fr,
                             Content = System.IO.File.ReadAllText("int-fr.txt")
                         },
                         new Introduction
                         {
                             Name = "int-en",
-                            Language = Language.english,
+                            Language = Language.en,
                             Content = System.IO.File.ReadAllText("int-en.txt")
                         },
                         new Introduction
                         {
                             Name = "int-ne",
-                            Language = Language.dutch,
+                            Language = Language.ne,
                             Content = System.IO.File.ReadAllText("int-ne.txt")
                         }
 

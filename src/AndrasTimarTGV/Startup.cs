@@ -30,6 +30,7 @@ namespace AndrasTimarTGV
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
               Configuration["Data:TGVMain:ConnectionString"]));
+            services.AddTransient<IIntroductionRepository, EFIntroductionRepository>();
             services.AddMvc();
         }
 
