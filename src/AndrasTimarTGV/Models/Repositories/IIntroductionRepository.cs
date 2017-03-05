@@ -7,7 +7,7 @@ namespace AndrasTimarTGV.Models
 {
     public interface IIntroductionRepository
     {
-        Introduction getIntroductionsByLangString(string lang);
-        IEnumerable<Introduction> Introductions { get; }                    
+        Introduction GetIntroductionsByLang(Language lang);
+        IEnumerable<Introduction> Introductions { get; }        
     }
 }

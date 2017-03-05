@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models;
+using AndrasTimarTGV.Models.Entities;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,5 +13,9 @@ namespace AndrasTimarTGV.Models {
         }
                  
         public DbSet<Introduction> Introductions { get; set; }
+
+        public DbSet<Trip> Trips { get; set; }
+
+        public DbSet<City> Cities { get; set; }
     }
 }

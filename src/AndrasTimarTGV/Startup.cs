@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models;
+using AndrasTimarTGV.Models.Repositories;
+using AndrasTimarTGV.Models.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +33,10 @@ namespace AndrasTimarTGV
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
               Configuration["Data:TGVMain:ConnectionString"]));
             services.AddTransient<IIntroductionRepository, EFIntroductionRepository>();
+            services.AddTransient<IIntroductionService, IntroductionService>();
+            services.AddTransient<ITripRepository, EFTripRepository>();
+            services.AddTransient<ITripService, TripService>();
+            services.AddTransient<ICityRepository, CityRepository>();
             services.AddMvc();
         }
 
@@ -50,7 +56,7 @@ namespace AndrasTimarTGV
                    defaults: new { controller = "Home", action = "Index" });               
             });
 
-            IntroductionData.AddIntroductionDataToDB(app);
+            SeedData.AddSeedData(app);
         }
     }
 }

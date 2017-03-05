@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Trip>
+
+<div class="container">
+    @if (Model.Any())
+    {
+        <ul class="list-group">
+            @foreach (var trip in Model)
+            {
+                <li class="list-group-item">@trip.FromCity.Name || @trip.ToCity.Name || @trip.Time</li>
+            }
+        </ul>
+    }else{ 
+        <div>
+            Sorry, we found no results for your search
+        </div>
+    }
+</div>

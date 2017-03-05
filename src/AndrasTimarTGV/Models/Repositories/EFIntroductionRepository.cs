@@ -16,9 +16,9 @@ namespace AndrasTimarTGV.Models
         }
 
         public IEnumerable<Introduction> Introductions => context.Introductions;
-        public Introduction getIntroductionsByLangString(string lang)
+        public Introduction GetIntroductionsByLang(Language lang)
         {
-            return context.Introductions.FirstOrDefault(x => x.Language == (Language) Enum.Parse(typeof(Language),lang));
+            return context.Introductions.FirstOrDefault(x => x.Language == lang);
         }
     }
 }

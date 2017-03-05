@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models;
+using AndrasTimarTGV.Models.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AndrasTimarTGV.Controllers
 {
     public class HomeController: Microsoft.AspNetCore.Mvc.Controller
     {
-        private IIntroductionRepository repo;
+        private IIntroductionService introductionService;
 
-        public HomeController(IIntroductionRepository repository)
+        public HomeController(IIntroductionService introductionService)
         {
-            repo = repository;
+            this.introductionService = introductionService;
         }
         public ViewResult Index(string lang)
         {
-            ViewBag.content = repo.getIntroductionsByLangString(lang).Content;
-            return View();
+            Introduction intro = introductionService.GetIntroductionForLang(lang);
+            return View(intro);
         }
     }
 }
