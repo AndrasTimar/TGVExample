@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AndrasTimarTGV.Models.DTO;
 using AndrasTimarTGV.Models.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -11,7 +10,9 @@ namespace AndrasTimarTGV.Models.ViewModels
 {
     public class TripViewModel
     {
-        public TripSearchDTO TripSearch { get; set; }
+        public int FromCityId { get; set; }
+        public int ToCityId { get; set; }
+        public DateTime Time { get; set; } = DateTime.Today;
 
         public IEnumerable<SelectListItem> Cities { get; set; }        
 
@@ -19,9 +20,8 @@ namespace AndrasTimarTGV.Models.ViewModels
         {
             
         }
-        public TripViewModel(TripSearchDTO tripSearchDto, IEnumerable<City> cities)
+        public TripViewModel(IEnumerable<City> cities)
         {
-            TripSearch = tripSearchDto;
             Cities = ConvertToSelectList(cities);
         }
 

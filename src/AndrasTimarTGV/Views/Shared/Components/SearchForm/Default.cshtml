@@ -1,19 +1,19 @@
 ﻿@model AndrasTimarTGV.Models.ViewModels.TripViewModel
 <div class="row panel">
-    <form asp-action="List" method="post">
-        <div class="form-group col-md-2">
+    <form asp-action="List" asp-controller="Trip" method="post">
+        <div class="form-group">
             <label>Departure City</label>
             <div>
                 @Html.DropDownListFor(x => x.FromCityId, Model.Cities, "Choose departure city")
             </div>
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group">
             <label>Destination City</label>
             <div>
                 @Html.DropDownListFor(x => x.ToCityId, Model.Cities, "Choose destination city")
             </div>
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group">
             <label asp-for="Time"></label>
             <div><span asp-validation-for="Time" class="text-danger"></span></div>
             <input asp-for="Time" type="date" class="form-control" />

@@ -37,6 +37,7 @@ namespace AndrasTimarTGV
             services.AddTransient<ITripRepository, EFTripRepository>();
             services.AddTransient<ITripService, TripService>();
             services.AddTransient<ICityRepository, CityRepository>();
+            services.AddTransient<ICityService, CityService>();
             services.AddMvc();
         }
 

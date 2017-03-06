@@ -2,21 +2,23 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" asp-href-include="lib/bootstrap/dist/css/*.css" />
+    <link rel="stylesheet" asp-href-include="lib/bootstrap/dist/css/*.css" />   
+    <link rel="stylesheet" asp-href-include="/style/*.css"/> 
     <link rel="stylesheet" asp-href-include="lib/fontawesome/css/*.css" />
     <title>SportsStore</title>
 </head>
 <body>
     <div class="navbar navbar-inverse" role="navigation">
-        <a class="navbar-brand" href="#">TGV Tickets</a>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="/trip/search">Search for a ticket</a></li>
-            </ul>
+        <a class="navbar-brand" href="/">TGV Tickets</a>
+        <div id="navbar" class="navbar-collapse collapse">           
         </div>
-        </div>
-        <div class="col-xs-8">
-            @RenderBody()
-        </div>
+    </div>
+
+    <div class="container col-xs-2" style="padding-left: 2%">
+        @await Component.InvokeAsync($"SearchForm")
+    </div>
+    <div class="col-xs-8">
+        @RenderBody()
+    </div>
 </body>
 </html>

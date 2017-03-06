@@ -4,9 +4,8 @@
     @if (Model.Any())
     {
         <ul class="list-group">
-            @foreach (var trip in Model)
-            {
-                <li class="list-group-item">@trip.FromCity.Name || @trip.ToCity.Name || @trip.Time</li>
+            @foreach (var trip in Model) {
+                <a class="list-group-item">@trip.FromCity.Name || @trip.ToCity.Name || @trip.Time</a>
             }
         </ul>
     }else{ 

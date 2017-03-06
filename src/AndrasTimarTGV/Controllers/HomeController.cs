@@ -10,7 +10,7 @@ namespace AndrasTimarTGV.Controllers
 {
     public class HomeController: Microsoft.AspNetCore.Mvc.Controller
     {
-        private IIntroductionService introductionService;
+        private readonly IIntroductionService introductionService;
 
         public HomeController(IIntroductionService introductionService)
         {
