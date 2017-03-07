@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
@@ -10,6 +11,7 @@ namespace AndrasTimarTGV.Models.ViewModels
 {
     public class TripViewModel
     {
+        // TODO: validation on this ViewModel
         public int FromCityId { get; set; }
         public int ToCityId { get; set; }
         public DateTime Time { get; set; } = DateTime.Today;

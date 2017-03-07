@@ -15,7 +15,7 @@ namespace AndrasTimarTGV.Models
 
     public class Introduction
     {
-        public int IntroductionId { get; set; }
+        public int IntroductionId { get;set; }
         public string Name { get; set; }
 
         public string Content { get; set; }

@@ -3,22 +3,66 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" asp-href-include="lib/bootstrap/dist/css/*.css" />   
-    <link rel="stylesheet" asp-href-include="/style/*.css"/> 
+    <link rel="stylesheet" asp-href-include="/style/custom.css"/> 
     <link rel="stylesheet" asp-href-include="lib/fontawesome/css/*.css" />
     <title>SportsStore</title>
 </head>
 <body>
-    <div class="navbar navbar-inverse" role="navigation">
-        <a class="navbar-brand" href="/">TGV Tickets</a>
-        <div id="navbar" class="navbar-collapse collapse">           
+<nav class="jumbotron banner">
+    <div class="container text-left">
+        <h3> Welcome to the TGV ticket system</h3>
+        <h5>Book Your Tickets Here</h5>
+    </div>
+</nav>
+    <div class="row">
+        <div class="custom-div col-xs-2 side-component">
+            @if (User?.Identity?.IsAuthenticated ?? false)
+            {
+                <table>
+                    <tr>
+                        <td><h4>User</h4></td>
+                    </tr>
+                    <tr>
+                        <td>You are logged in as @User.Identity.Name</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="margin: 2%"></span>
+                        </td>
+                    </tr>                    
+                    <tr>
+                        <td><a class="btn btn-primary" a asp-controller="Account" asp-action="Logout">Logout</a></td>
+                    </tr>
+                </table>
+            } else { 
+                @await Component.InvokeAsync($"LoginForm")
+            }
+        </div>        
+        <div class="custom-div col-xs-7">
+            @RenderBody()
+        </div>
+        <div class="custom-div col-xs-2 side-component" >
+            @await Component.InvokeAsync($"SearchForm")
         </div>
     </div>
 
-    <div class="container col-xs-2" style="padding-left: 2%">
-        @await Component.InvokeAsync($"SearchForm")
-    </div>
-    <div class="col-xs-8">
-        @RenderBody()
-    </div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="../../dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>
+
+
+<!-- <div class="navbar navbar-inverse" role="navigation">
+    <a class="navbar-brand" href="/">TGV Tickets</a>
+    <div id="navbar" class="navbar-collapse collapse dropdown-menu">
+        @if (User?.Identity?.IsAuthenticated ?? false) {
+            <a asp-controller="Account" asp-action="Logout" class="btn btn-danger">Logout</a>
+        }
+    </div>
+</div> -->

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models;
+using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
 using AndrasTimarTGV.Models.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,8 +32,20 @@ namespace AndrasTimarTGV
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(
+                Configuration["Data:TGVIdentity:ConnectionString"]));            
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
               Configuration["Data:TGVMain:ConnectionString"]));
+
+            services.AddIdentity<AppUser, IdentityRole>(options => {
+                    options.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = false;                    
+                }
+            ).AddEntityFrameworkStores<AppIdentityDbContext>();
             services.AddTransient<IIntroductionRepository, EFIntroductionRepository>();
             services.AddTransient<IIntroductionService, IntroductionService>();
             services.AddTransient<ITripRepository, EFTripRepository>();
@@ -45,11 +59,13 @@ namespace AndrasTimarTGV
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole();
+            loggerFactory.AddDebug();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             app.UseStaticFiles();
+            app.UseIdentity();
             app.UseMvc(routes => {
                 routes.MapRoute(
                    name: null,

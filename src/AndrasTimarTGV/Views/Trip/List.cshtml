@@ -1,14 +1,18 @@
 ﻿@model IEnumerable<Trip>
 
-<div class="container">
+<div class="col-xs-10">
+    <h4>Search results: </h4>
     @if (Model.Any())
     {
-        <ul class="list-group">
-            @foreach (var trip in Model) {
-                <a class="list-group-item">@trip.FromCity.Name || @trip.ToCity.Name || @trip.Time</a>
+        <div class="list-group">
+            @foreach (var trip in Model)
+            {
+                <a href="#" class="list-group-item">@trip.FromCity.Name || @trip.ToCity.Name || @trip.Time</a>
             }
-        </ul>
-    }else{ 
+        </div>
+    }
+    else
+    {
         <div>
             Sorry, we found no results for your search
         </div>

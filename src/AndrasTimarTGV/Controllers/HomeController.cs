@@ -16,6 +16,7 @@ namespace AndrasTimarTGV.Controllers
         {
             this.introductionService = introductionService;
         }
+
         public ViewResult Index(string lang)
         {
             Introduction intro = introductionService.GetIntroductionForLang(lang);

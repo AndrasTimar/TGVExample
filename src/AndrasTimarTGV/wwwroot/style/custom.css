@@ -1,8 +1,40 @@
-﻿.btn {
-    background: crimson;
-    border-color: crimson;
-    -ms-border-radius: 25%;
-    border-radius: 25%;
+﻿
+
+.custom-div {
+    margin: 1%;
+    padding: 1%;
+    border-radius: 10%;
+    float: right;
 }
 
+.side-component {
+    border-radius: 15%;
+    background-color: lightgrey;
+}
+
+.bg-primary {
+    background-color: lightgrey;
+}
+
+.btn {
+    background: crimson;
+    border-color: crimson;
+    -ms-border-radius: 10%;
+    border-radius: 10%;
+}
+
+.banner {
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/9/95/Paris_Wikivoyage_Banner.png");
+    background-size: cover;
+}
+.banner h3 {
+      color: white;
+    font-weight: bolder;
+    font-family: Serif;
+}
+.banner h5 {
+      color: white;
+    font-weight: bolder;
+    font-family: Serif;
+}
 

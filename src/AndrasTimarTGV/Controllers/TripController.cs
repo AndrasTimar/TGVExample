@@ -6,6 +6,7 @@ using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
 using AndrasTimarTGV.Models.Services;
 using AndrasTimarTGV.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AndrasTimarTGV.Controller
@@ -20,11 +21,17 @@ namespace AndrasTimarTGV.Controller
             this.tripService = tripService;
         }
 
+        [Authorize(Roles = "User")]
         [HttpPost]
         public ViewResult List(TripViewModel tripVM)
-        {            
-            var resulTrip = tripService.GetTripsByCitiesAndDate(tripVM.FromCityId, tripVM.ToCityId, tripVM.Time);          
-            return View(resulTrip);
+        {
+            //TODO: Modelstate.isvalid ??
+            if (ModelState.IsValid)
+            {
+                var resulTrip = tripService.GetTripsByCitiesAndDate(tripVM.FromCityId, tripVM.ToCityId, tripVM.Time);
+                return View(resulTrip);
+            }
+            return View("Search");
         }
 
         public ViewResult Search()
