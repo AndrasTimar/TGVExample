@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AndrasTimarTGV.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Microsoft.AspNetCore.Mvc.Controller
     {
         private UserManager<AppUser> userManager;

@@ -5,12 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AndrasTimarTGV.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RoleAdminController : Microsoft.AspNetCore.Mvc.Controller
     {
         private RoleManager<IdentityRole> roleManager;

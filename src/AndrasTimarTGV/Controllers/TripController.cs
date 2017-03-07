@@ -21,7 +21,6 @@ namespace AndrasTimarTGV.Controller
             this.tripService = tripService;
         }
 
-        [Authorize(Roles = "User")]
         [HttpPost]
         public ViewResult List(TripViewModel tripVM)
         {
