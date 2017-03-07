@@ -12,8 +12,11 @@ namespace AndrasTimarTGV.Models.ViewModels
     public class TripViewModel
     {
         // TODO: validation on this ViewModel
+        [Required]
         public int FromCityId { get; set; }
+        [Required]
         public int ToCityId { get; set; }
+        [Required]
         public DateTime Time { get; set; } = DateTime.Today;
 
         public IEnumerable<SelectListItem> Cities { get; set; }        

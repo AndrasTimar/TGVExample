@@ -1,6 +1,4 @@
-﻿
-
-.custom-div {
+﻿.custom-div {
     margin: 1%;
     padding: 1%;
     border-radius: 10%;
@@ -12,9 +10,7 @@
     background-color: lightgrey;
 }
 
-.bg-primary {
-    background-color: lightgrey;
-}
+.bg-primary { background-color: lightgrey; }
 
 .btn {
     background: crimson;
@@ -24,17 +20,18 @@
 }
 
 .banner {
-    background-image: url("https://upload.wikimedia.org/wikipedia/commons/9/95/Paris_Wikivoyage_Banner.png");
+    background-image: url("/img/parisbanner.png");
     background-size: cover;
 }
+
 .banner h3 {
-      color: white;
-    font-weight: bolder;
-    font-family: Serif;
-}
-.banner h5 {
-      color: white;
+    color: white;
     font-weight: bolder;
     font-family: Serif;
 }
 
+.banner h5 {
+    color: white;
+    font-weight: bolder;
+    font-family: Serif;
+}

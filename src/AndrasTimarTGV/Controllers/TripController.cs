@@ -27,10 +27,10 @@ namespace AndrasTimarTGV.Controller
             //TODO: Modelstate.isvalid ??
             if (ModelState.IsValid)
             {
-                var resulTrip = tripService.GetTripsByCitiesAndDate(tripVM.FromCityId, tripVM.ToCityId, tripVM.Time);
-                return View(resulTrip);
+                var resulTrips = tripService.GetTripsByCitiesAndDate(tripVM.FromCityId, tripVM.ToCityId, tripVM.Time);
+                return View(resulTrips.OrderBy(x=>x.Time.Hour));
             }
-            return View("Search");
+            return View("Search", new TripViewModel(cityService.Cities));
         }
 
         public ViewResult Search()

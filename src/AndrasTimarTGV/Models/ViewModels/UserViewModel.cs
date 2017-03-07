@@ -5,17 +5,48 @@ using System.Linq;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AndrasTimarTGV.Models.ViewModels
 {
     public class CreateUserViewModel
     {
+        public IEnumerable<SelectListItem> Languages => new List<SelectListItem>() {
+            new SelectListItem()
+            {
+                Text = "French",
+                Value = Language.fr.ToString(),
+                Selected = false
+            },
+            new SelectListItem()
+            {
+                Text = "English",
+                Value = Language.en.ToString(),
+                Selected = false
+            },
+            new SelectListItem()
+            {
+                Text = "Dutch",
+                Value = Language.ne.ToString(),
+                Selected = false
+            },
+        };
+
         [Required]
-        public string Name { get; set; }
+        public string UserName { get; set; }
         [Required]
         public string Email { get; set; }
+        [UIHint("password")]
         [Required]
         public string Password { get; set; }
+        [UIHint("password")]
+        [Required]
+        public string PasswordConfirm { get; set; }
+        public string DefaultLanguage { get; set; } = "en";
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
     }
     public class LoginUserViewModel {
 

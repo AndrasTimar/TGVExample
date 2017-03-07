@@ -1,6 +1,7 @@
 ﻿@model AndrasTimarTGV.Models.ViewModels.TripViewModel
 
-    <div><h4>Search</h4></div>
+<div><h4>Search</h4></div>
+<div class="text-danger" asp-validation-summary="ModelOnly"></div>
     <form asp-action="List" asp-controller="Trip" method="post">
         <div class="form-group">
             <label>Departure City</label>

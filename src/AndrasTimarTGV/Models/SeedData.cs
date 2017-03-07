@@ -75,20 +75,24 @@ namespace AndrasTimarTGV.Models
                     {
                         if (toCity != fromCity)
                         {
-                            DateTime date = DateTime.Today;
                             for (int i = 0; i < 20; i++)
                             {
-                                date = date.AddHours(random.Next(6, 22));
-                                context.Add(new Trip
-                                {
-                                    FreePlaces = 300,
-                                    FromCity = fromCity,
-                                    ToCity = toCity,
-                                    PricePerPerson = 24,
-                                    Time = date.AddDays(i),
-                                    TotalPlaces = 300,
-                                });
+                                DateTime date = DateTime.Today;
+
+                                for (int j = 0; j < random.Next(1,4); j++) {
+                                    date = date.AddHours(random.Next(6, 22));
+
+                                    context.Add(new Trip {
+                                        FreePlaces = 300,
+                                        FromCity = fromCity,
+                                        ToCity = toCity,
+                                        PricePerPerson = 24,
+                                        Time = date.AddDays(i),
+                                        TotalPlaces = 300,
+                                    });
+                                }
                             }
+                                
                         }
                     }
                 }
