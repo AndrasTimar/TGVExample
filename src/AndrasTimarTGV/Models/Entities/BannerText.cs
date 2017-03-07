@@ -13,13 +13,11 @@ namespace AndrasTimarTGV.Models
         ne = 2
     }
 
-    public class Introduction
+    public class BannerText
     {
-        public int IntroductionId { get;set; }
-        public string Name { get; set; }
-
-        public string Content { get; set; }
-
+        public int BannerTextId { get;set; }
+        public string Header { get; set; }
+        public string Body { get; set; }
         [EnumDataType(typeof(Language))]
         public Language Language { get; set; }
 

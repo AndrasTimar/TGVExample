@@ -10,16 +10,21 @@ namespace AndrasTimarTGV.Controllers
 {
     public class HomeController: Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly IIntroductionService introductionService;
+        private readonly IBannerTextService bannerTextService;
 
-        public HomeController(IIntroductionService introductionService)
+        public HomeController(IBannerTextService bannerTextService)
         {
-            this.introductionService = introductionService;
+            this.bannerTextService = bannerTextService;
         }
 
         public ViewResult Index(string lang)
         {
-            Introduction intro = introductionService.GetIntroductionForLang(lang);
+            BannerText intro = bannerTextService.GetBannerTextForLang((Language)Enum.Parse(typeof(Language), lang));
+            if (intro != null)
+            {
+                return View(intro);
+            }
+            intro = bannerTextService.GetBannerTextForLang(Language.en);
             return View(intro);
         }
     }

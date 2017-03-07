@@ -13,12 +13,12 @@ namespace AndrasTimarTGV.Components
     public class BannerViewComponent : ViewComponent
     {
         private UserManager<AppUser> userManager;
-        private IIntroductionService introService;
+        private IBannerTextService bannerTextService;
 
-        public BannerViewComponent(UserManager<AppUser> userManager, IIntroductionService introductionService)
+        public BannerViewComponent(UserManager<AppUser> userManager, IBannerTextService bannerService)
         {
             this.userManager = userManager;
-            introService = introductionService;
+            bannerTextService = bannerService;
         }
 
         public IViewComponentResult Invoke()
@@ -26,9 +26,9 @@ namespace AndrasTimarTGV.Components
             AppUser user = userManager.FindByNameAsync(HttpContext.User.Identity.Name??"").Result;
             if (user != null)
             {
-                return View(introService.GetIntroductionForLang(user.DefaultLanguage.ToString()));
+                return View(bannerTextService.GetBannerTextForLang(user.DefaultLanguage));
             }
-            return View(introService.GetIntroductionForLang(Language.en.ToString()));
+            return View(bannerTextService.GetBannerTextForLang(Language.en));
         }
     }
 }

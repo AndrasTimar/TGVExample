@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace AndrasTimarTGV.Models.Services
 {
-    public interface IIntroductionService
+    public interface IBannerTextService
     {
-        Introduction GetIntroductionForLang(string lang);
+        BannerText GetBannerTextForLang(Language lang);
     }
 }

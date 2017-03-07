@@ -12,7 +12,7 @@ namespace AndrasTimarTGV.Models {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {
         }
                  
-        public DbSet<Introduction> Introductions { get; set; }
+        public DbSet<BannerText> BannerTexts { get; set; }
 
         public DbSet<Trip> Trips { get; set; }
 

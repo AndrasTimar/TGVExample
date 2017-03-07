@@ -20,30 +20,30 @@ namespace AndrasTimarTGV.Models
         }
         private static void AddIntroductionSeedDataToDB(ApplicationDbContext context, ILogger _logger) {
             
-            if (!context.Introductions.Any()) {
+            if (!context.BannerTexts.Any()) {
                 try {
-                    context.Introductions.AddRange(
-                        new Introduction {
-                            Name = "int-fr",
+                    context.BannerTexts.AddRange(
+                        new BannerText {                           
                             Language = Language.fr,
-                            Content = System.IO.File.ReadAllText("int-fr.txt")
+                            Header= "Bienvenue a la TGV Ticket System",
+                            Body = "Réservez vos places ici"
                         },
-                        new Introduction {
-                            Name = "int-en",
+                        new BannerText {
                             Language = Language.en,
-                            Content = System.IO.File.ReadAllText("int-en.txt")
+                            Header = "Welcome to the TGV Ticket System",
+                            Body = "Book your tickets here"
                         },
-                        new Introduction {
-                            Name = "int-ne",
+                        new BannerText {
                             Language = Language.ne,
-                            Content = System.IO.File.ReadAllText("int-ne.txt")
+                            Header = "Welkom bij de TGV Ticket System",
+                            Body = "Reserveer uw tickets hier"
                         }
 
                     );
 
                     context.SaveChanges();
                 } catch (FileNotFoundException exception) {
-                    _logger.LogError("Introduction file was not found : " + exception.FileName + ". Introduction table will be empty for this lang");
+                    _logger.LogError("BannerText file was not found : " + exception.FileName + ". BannerText table will be empty for this lang");
                 }
             }
 

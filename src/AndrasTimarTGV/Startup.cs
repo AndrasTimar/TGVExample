@@ -46,8 +46,8 @@ namespace AndrasTimarTGV
                     options.Password.RequireLowercase = false;                    
                 }
             ).AddEntityFrameworkStores<AppIdentityDbContext>();
-            services.AddTransient<IIntroductionRepository, EFIntroductionRepository>();
-            services.AddTransient<IIntroductionService, IntroductionService>();
+            services.AddTransient<IBannerTextRepository, EFBannerTextRepository>();
+            services.AddTransient<IBannerTextService, BannerTextService>();
             services.AddTransient<ITripRepository, EFTripRepository>();
             services.AddTransient<ITripService, TripService>();
             services.AddTransient<ICityRepository, CityRepository>();
