@@ -83,12 +83,12 @@ namespace AndrasTimarTGV.Models
                                     date = date.AddHours(random.Next(6, 22));
 
                                     context.Add(new Trip {
-                                        FreePlaces = 300,
+                                        FreeBusinessPlaces = 50,
                                         FromCity = fromCity,
                                         ToCity = toCity,
-                                        PricePerPerson = 24,
+                                        PricePerPerson = 20+random.Next(10,36),
                                         Time = date.AddDays(i),
-                                        TotalPlaces = 300,
+                                        FreeEconomyPlaces = 300,
                                     });
                                 }
                             }

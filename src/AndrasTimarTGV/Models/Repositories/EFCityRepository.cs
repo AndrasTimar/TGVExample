@@ -6,10 +6,10 @@ using AndrasTimarTGV.Models.Entities;
 
 namespace AndrasTimarTGV.Models.Repositories
 {
-    public class CityRepository : ICityRepository
+    public class EFCityRepository : ICityRepository
     {
         private ApplicationDbContext context;
-        public CityRepository(ApplicationDbContext ctx)
+        public EFCityRepository(ApplicationDbContext ctx)
         {
             context = ctx;
         }

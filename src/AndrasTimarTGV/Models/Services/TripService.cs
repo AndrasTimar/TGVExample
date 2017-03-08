@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace AndrasTimarTGV.Models.Services
 {
@@ -20,6 +21,11 @@ namespace AndrasTimarTGV.Models.Services
         public IEnumerable<Trip> GetTripsByCitiesAndDate(int fromCityId, int toCityId, DateTime time)
         {
             return tripRepository.GetTripsByDateAndCities(fromCityId, toCityId, time);
+        }
+
+        public Trip GetTripById(int tripId)
+        {
+            return tripRepository.GetTipById(tripId);
         }
     }
 }

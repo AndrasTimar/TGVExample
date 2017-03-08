@@ -1,0 +1,52 @@
+﻿@model Reservation
+
+<div>
+    <h4>Reservation</h4>
+</div>
+<div class="text-danger" asp-validation-summary="ModelOnly"></div>
+<form asp-action="Checkout" asp-controller="Reservation" method="post">
+    <div class="form-group">
+        <label>User Details</label>
+        <div class="well">
+            <label>First Name</label>
+            <div>
+                @Model.User.FirstName
+            </div>
+            <label>Last Name</label>
+            <div>
+                @Model.User.LastName
+            </div>
+        </div>
+        <label>Travel Details</label>
+        <div class="well">
+            <label>Departure City</label>
+            <div>
+                @Model.Trip.FromCity.Name
+            </div>
+            <label>Destination City</label>
+            <div>
+                @Model.Trip.ToCity.Name
+            </div>
+            <label>Date</label>
+            <div>
+                @Model.Trip.Time
+            </div>
+            <label>Seats</label>
+            <div>
+                @Model.Seats
+            </div>
+            <label>Class</label>
+            <div>
+                @Model.TravelClass
+            </div>
+            
+            <input asp-for="TravelClass" hidden="hidden" />
+            <input asp-for="Seats" hidden="hidden" />
+             <input asp-for="Trip.TripId" hidden="hidden"/>
+            <label>Total price:  @((Model.Trip.PricePerPerson * Model.Seats).ToString("c")) </label>
+        </div>
+        <div class="left">
+            <button class="btn btn-primary" type="submit">Checkout</button>
+        </div>
+    </div>
+</form>

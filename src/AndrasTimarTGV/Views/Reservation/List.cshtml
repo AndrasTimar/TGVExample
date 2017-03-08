@@ -1,0 +1,14 @@
+﻿@model System.Collections.Generic.IEnumerable<AndrasTimarTGV.Models.Entities.Reservation>
+@{
+    if (Model.Any())
+    {
+        foreach (var reservation in @Model)
+        {
+            @Html.Partial("_ReservationSummary", reservation)
+        }
+    }
+    else
+    {
+        <h4>You have no reservations currently</h4>
+    }
+}

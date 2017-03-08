@@ -1,0 +1,8 @@
+﻿@model Trip
+
+
+<form id="tripId" asp-action="Reserve"
+      asp-controller="Reservation" method="get">
+    <input type="hidden" asp-for="TripId" />
+    <button type="submit" class="list-group-item">@Model.FromCity.Name || @Model.ToCity.Name || @Model.Time || @Model.PricePerPerson.ToString("c")</button>
+</form>

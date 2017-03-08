@@ -1,0 +1,22 @@
+﻿<table class="table-condensed">
+    <tr>
+        <td><h4>User menu</h4></td>
+    </tr>
+    <tr>
+        <td>You are logged in as @User.Identity.Name</td>
+    </tr>
+
+    <tr>
+        <td>
+            <a asp-action="List" asp-controller="Reservation" class="btn btn-primary">My Reservations</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+             <a asp-action="Edit" asp-controller="Account" class="btn btn-primary">Account Settings</a>
+        </td>
+    </tr>
+    <tr><td>        
+            <a class="btn btn-primary" a asp-controller="Account" asp-action="Logout">Logout</a>
+    </td></tr>
+</table>

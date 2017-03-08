@@ -32,10 +32,8 @@ namespace AndrasTimarTGV
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(
-                Configuration["Data:TGVIdentity:ConnectionString"]));            
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
-              Configuration["Data:TGVMain:ConnectionString"]));
+                Configuration["Data:TGVIdentity:ConnectionString"]));            
 
             services.AddIdentity<AppUser, IdentityRole>(options => {
                     options.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
@@ -45,13 +43,15 @@ namespace AndrasTimarTGV
                     options.Password.RequireUppercase = false;
                     options.Password.RequireLowercase = false;                    
                 }
-            ).AddEntityFrameworkStores<AppIdentityDbContext>();
+            ).AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddTransient<IBannerTextRepository, EFBannerTextRepository>();
             services.AddTransient<IBannerTextService, BannerTextService>();
             services.AddTransient<ITripRepository, EFTripRepository>();
             services.AddTransient<ITripService, TripService>();
-            services.AddTransient<ICityRepository, CityRepository>();
+            services.AddTransient<ICityRepository, EFCityRepository>();
             services.AddTransient<ICityService, CityService>();
+            services.AddTransient<IReservationRepository, EFReservationRepository>();
+            services.AddTransient<IReservationService, ReservationService>();
             services.AddMvc();
             services.AddSession();
         }
@@ -68,13 +68,20 @@ namespace AndrasTimarTGV
             app.UseStaticFiles();
             app.UseSession();
             app.UseIdentity();
-            app.UseMvc(routes => {
+            app.UseMvc(routes =>
+            {
+                
                 routes.MapRoute(
-                   name: null,
-                   template: "{controller}/{action}/{lang=en}",
-                   defaults: new { controller = "Home", action = "Index" });               
-            });
+                    name: null,
+                    template: "{controller}/{action}",
+                    defaults: new {controller = "Home", action = "Index"});
 
+                routes.MapRoute(
+                    name: null,
+                    template: "",
+                    defaults: new {controller = "Home", action = "Index"});
+                routes.MapRoute(name: null, template: "{controller}/{action}/{id?}");
+            });
             SeedData.AddSeedData(app);
         }
     }

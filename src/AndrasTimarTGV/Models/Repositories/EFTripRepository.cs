@@ -29,6 +29,10 @@ namespace AndrasTimarTGV.Models.Repositories
                 && x.FromCity.CityId == fromCityId 
                 && x.Time.Date == time.Date);
         }
-       
+
+        public Trip GetTipById(int tripId)
+        {
+            return context.Trips.Include(x=>x.FromCity).Include(x=>x.ToCity).FirstOrDefault(x => x.TripId == tripId);
+        }
     }
 }

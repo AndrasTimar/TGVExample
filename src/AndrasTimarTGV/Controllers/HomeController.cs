@@ -17,15 +17,9 @@ namespace AndrasTimarTGV.Controllers
             this.bannerTextService = bannerTextService;
         }
 
-        public ViewResult Index(string lang)
-        {
-            BannerText intro = bannerTextService.GetBannerTextForLang((Language)Enum.Parse(typeof(Language), lang));
-            if (intro != null)
-            {
-                return View(intro);
-            }
-            intro = bannerTextService.GetBannerTextForLang(Language.en);
-            return View(intro);
+        public ViewResult Index()
+        {           
+            return View();
         }
     }
 }

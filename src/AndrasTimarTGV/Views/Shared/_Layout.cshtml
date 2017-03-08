@@ -15,34 +15,18 @@
             </div>
         </div>
     </a>
-        <div class="row">
-            <div class="custom-div col-xs-2 side-component">
+        <div class="container-fluid">
+            <div class="well col-xs-11 col-lg-2 custom-div">
                 @if (User.Identity != null && (User?.Identity?.IsAuthenticated ?? false)) {
-                    <table>
-                        <tr>
-                            <td><h4>User</h4></td>
-                        </tr>
-                        <tr>
-                            <td>You are logged in as @User.Identity.Name</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span style="margin: 2%"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a class="btn btn-primary" a asp-controller="Account" asp-action="Logout">Logout</a></td>
-                            <td><a asp-action="Edit" asp-controller="Account" class="btn btn-primary">Edit</a></td>
-                        </tr>
-                    </table>
+                   @Html.Partial("_ProfileSummary")
                 } else {
                     @await Component.InvokeAsync($"LoginForm")
                 }
             </div>
-            <div class="custom-div col-xs-7">
+            <div class="custom-div col-xs-11 col-lg-6">
                 @RenderBody()
             </div>
-            <div class="custom-div col-xs-2 side-component">
+            <div class="well col-xs-11 col-lg-3 custom-div">
                 @await Component.InvokeAsync($"SearchForm")
             </div>
         </div>
@@ -52,7 +36,7 @@
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-        <script src="../../dist/js/bootstrap.min.js"></script>
+        <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>

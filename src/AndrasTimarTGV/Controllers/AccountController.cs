@@ -14,9 +14,9 @@ namespace AndrasTimarTGV.Controllers
     [Authorize]
     public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private UserManager<AppUser> userManager;
-        private SignInManager<AppUser> signInManager;
-        private IPasswordHasher<AppUser> passwordHasher;
+        private readonly UserManager<AppUser> userManager;
+        private readonly SignInManager<AppUser> signInManager;
+        private readonly IPasswordHasher<AppUser> passwordHasher;
 
         public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
             IPasswordHasher<AppUser> passHasher)

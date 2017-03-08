@@ -1,8 +1,7 @@
 ﻿.custom-div {
-    margin: 1%;
-    padding: 1%;
     border-radius: 10%;
     float: right;
+    margin: 1%;
 }
 
 .side-component {
