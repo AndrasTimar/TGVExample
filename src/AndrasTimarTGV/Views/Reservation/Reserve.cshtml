@@ -3,8 +3,18 @@
 <div><h4>Reservation</h4></div>
 <div class="text-danger" asp-validation-summary="All"></div>
 <form asp-action="Proceed" asp-controller="Reservation" method="post">    
-    <div class="form-group">
-             
+    @if (@Model.Trip.FreeBusinessPlaces < 10)
+    {
+        <div class="panel-body">
+            <div class="alert alert-danger">@Model.Trip.FreeBusinessPlaces places left for Business class on this trip!</div>
+        </div>
+    }
+    @if (@Model.Trip.FreeEconomyPlaces < 10) {
+        <div class="panel-body">
+            <div class="alert alert-danger">@Model.Trip.FreeEconomyPlaces places left for Economy class on this trip!</div>
+        </div>
+    }
+    <div class="form-group">       
         <label>User Details</label>
         <div class="well">
             <label>First Name</label>
@@ -23,8 +33,7 @@
         <label>Destination City</label>
         <div>
             @Model.Trip.ToCity.Name
-        </div>
-        
+        </div>        
         <label>Date</label>
         <div>
             @Model.Trip.Time
@@ -33,7 +42,9 @@
 
         <div>
             <label asp-for="Seats"></label>
+            <div>
             <input asp-for="Seats" />
+            </div>
         </div>     
         <label asp-for="TravelClass"></label>
         <select asp-for="TravelClass" class="form-control"

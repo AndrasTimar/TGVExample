@@ -13,5 +13,6 @@ namespace AndrasTimarTGV.Models.Services
         IEnumerable<Trip> GetTripsByCitiesAndDate(int tripSearchFromCityId, int tripSearchToCityId, DateTime tripSearchTime);
 
         Trip GetTripById(int tripId);
+        void UpdateTripSeats(Trip trip);
     }
 }

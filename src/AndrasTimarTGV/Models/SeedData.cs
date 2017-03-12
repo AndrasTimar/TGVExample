@@ -80,7 +80,7 @@ namespace AndrasTimarTGV.Models
                                 DateTime date = DateTime.Today;
 
                                 for (int j = 0; j < random.Next(1,4); j++) {
-                                    date = date.AddHours(random.Next(6, 22));
+                                    date = date.AddMinutes(random.Next(60, 1800));
 
                                     context.Add(new Trip {
                                         FreeBusinessPlaces = 50,

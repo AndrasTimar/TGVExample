@@ -1,24 +1,38 @@
 ﻿@model Reservation
-<div class="well">
-    <div>
-        <label>Departure City</label>
-        @Model.Trip.FromCity.Name
+<div class="well container-fluid">
+    <div class="col-sm-9">
+        <div>
+            <label>Departure City</label>
+            @Model.Trip.FromCity.Name
+        </div>
+        <div>
+            <label>Destination City</label>
+            @Model.Trip.ToCity.Name
+        </div>
+        <div>
+            <label>Date</label>
+            @Model.Trip.Time
+        </div>
+        <div>
+            <label>Travel class</label>
+            @Model.TravelClass
+        </div>
+        <div>
+            <label>Number of seats</label>
+            @Model.Seats
+        </div>
+        <div>
+            <label>Date reserved: </label>
+            @Model.ReservationTimeStamp
+        </div>
+        <label>Total price:  @((Model.Trip.PricePerPerson * Model.Seats).ToString("c")) </label>
     </div>
-    <div>
-        <label>Destination City</label>
-        @Model.Trip.ToCity.Name
+    <div class="col-sm-2" style="float:right">
+        <form asp-action="Delete" asp-controller="Reservation" method="post">
+            <input type="hidden" name="reservationId" value="@Model.ReservationId" />
+            <button type="submit" class="btn btn-sm btn-danger">
+                Remove
+            </button>
+        </form>
     </div>
-    <div>
-        <label>Date</label>
-        @Model.Trip.Time
-    </div>
-    <div>
-        <label>Travel class</label>
-        @Model.TravelClass
-    </div>
-    <div>
-        <label># of seats</label>
-        @Model.Seats
-    </div>
-    <label>Total price:  @((Model.Trip.PricePerPerson * Model.Seats).ToString("c")) </label>
 </div>

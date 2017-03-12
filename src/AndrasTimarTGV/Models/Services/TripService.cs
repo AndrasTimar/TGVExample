@@ -27,5 +27,10 @@ namespace AndrasTimarTGV.Models.Services
         {
             return tripRepository.GetTipById(tripId);
         }
+
+        public void UpdateTripSeats(Trip trip)
+        {
+            tripRepository.UpdateTripSeats(trip);
+        }
     }
 }

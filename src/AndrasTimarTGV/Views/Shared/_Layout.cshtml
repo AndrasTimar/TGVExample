@@ -8,7 +8,7 @@
     <title>SportsStore</title>
 </head>
 <body>
-    <a class="label-default" href="/home/index">
+    <a href="/home/index">
         <div class="jumbotron banner">
             <div class="container text-left">
                 @await Component.InvokeAsync($"Banner")
@@ -16,17 +16,17 @@
         </div>
     </a>
         <div class="container-fluid">
-            <div class="well col-xs-11 col-lg-2 custom-div">
+            <div class="well col-xs-11 col-md-2 custom-div">
                 @if (User.Identity != null && (User?.Identity?.IsAuthenticated ?? false)) {
                    @Html.Partial("_ProfileSummary")
                 } else {
                     @await Component.InvokeAsync($"LoginForm")
                 }
             </div>
-            <div class="custom-div col-xs-11 col-lg-6">
+            <div class="custom-div col-xs-11 col-md-6">
                 @RenderBody()
             </div>
-            <div class="well col-xs-11 col-lg-3 custom-div">
+            <div class="well col-xs-11 col-md-3 custom-div">
                 @await Component.InvokeAsync($"SearchForm")
             </div>
         </div>

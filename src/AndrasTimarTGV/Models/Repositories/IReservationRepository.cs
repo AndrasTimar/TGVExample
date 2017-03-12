@@ -11,5 +11,7 @@ namespace AndrasTimarTGV.Models.Repositories
         IEnumerable<Reservation> Reservations { get; }
         void SaveReservation(Reservation reservation);
         IEnumerable<Reservation> GetReservationByUserId(string userId);
+        Reservation GetReservationById(int reservationId);
+        void Delete(Reservation reservation);
     }
 }

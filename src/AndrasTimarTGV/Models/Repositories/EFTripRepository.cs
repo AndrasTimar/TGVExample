@@ -34,5 +34,17 @@ namespace AndrasTimarTGV.Models.Repositories
         {
             return context.Trips.Include(x=>x.FromCity).Include(x=>x.ToCity).FirstOrDefault(x => x.TripId == tripId);
         }
+
+        public void UpdateTripSeats(Trip trip)
+        {
+            Trip entry = context.Trips.FirstOrDefault(x => x.TripId == trip.TripId);
+            if (entry != null)
+            {
+                entry.FreeBusinessPlaces = trip.FreeBusinessPlaces;
+                entry.FreeEconomyPlaces = trip.FreeEconomyPlaces;
+                context.SaveChanges();
+            }         
+            
+        }
     }
 }

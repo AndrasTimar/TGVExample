@@ -30,5 +30,22 @@ namespace AndrasTimarTGV.Models.Repositories
                     .Include(x => x.Trip)
                     .ThenInclude(x => x.FromCity);
         }
+
+        public Reservation GetReservationById(int reservationId)
+        {
+            return context.Reservations.Where(x => x.ReservationId == reservationId)
+                .Include(x => x.User)
+                .Include(x => x.Trip)
+                .ThenInclude(x => x.FromCity)
+                .Include(x => x.Trip)
+                .ThenInclude(x => x.ToCity).FirstOrDefault();
+        }
+
+        public void Delete(Reservation reservation)
+        {
+            Reservation entry = context.Reservations.FirstOrDefault(x => x.ReservationId == reservation.ReservationId);
+            context.Remove(entry);
+            context.SaveChanges();
+        }
     }
 }

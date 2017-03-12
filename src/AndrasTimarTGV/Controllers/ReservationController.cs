@@ -55,8 +55,13 @@ namespace AndrasTimarTGV.Controllers
         {
             model.User = await userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             model.Trip = tripService.GetTripById(model.Trip.TripId);
-            reservationService.SaveReservation(model);
-            return View(model);
+            if (reservationService.SaveReservation(model))
+            {
+                return View(model);
+            }
+            ModelState.AddModelError("", "Not enough free seats");
+            return View("Reserve", model);
+
         }
 
         public async Task<ViewResult> List()
@@ -64,5 +69,14 @@ namespace AndrasTimarTGV.Controllers
             AppUser user = await userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             return View(reservationService.GetReservationsByUser(user));
         }
- }       
+
+        public IActionResult Delete(int reservationId) {
+            Reservation reservation = reservationService.GetReservationsById(reservationId);
+            if (reservation != null && reservation.User.UserName == HttpContext.User.Identity.Name) {
+                reservationService.Delete(reservation);
+
+            }
+            return RedirectToAction("List");
+        }
+    }       
 }
