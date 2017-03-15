@@ -5,6 +5,10 @@
     <link rel="stylesheet" asp-href-include="lib/bootstrap/dist/css/*.css" />   
     <link rel="stylesheet" asp-href-include="/style/custom.css"/> 
     <link rel="stylesheet" asp-href-include="lib/fontawesome/css/*.css" />
+    <script asp-src-include="lib/jquery/**/jquery.min.js"></script>
+    <script asp-src-include="lib/jquery-validation/**/jquery.validate.min.js">
+    </script>
+    <script asp-src-include="lib/jquery-validation-unobtrusive/**/*.min.js"></script>
     <title>SportsStore</title>
 </head>
 <body>
@@ -15,8 +19,14 @@
             </div>
         </div>
     </a>
-        <div class="container-fluid">
-            <div class="well col-xs-11 col-md-2 custom-div">
+<div class="container-fluid">      
+    <style>
+        .input-validation-error {
+            border-color: red;
+            background-color: #fee;
+        }
+    </style>
+    <div class="well col-xs-11 col-md-2 custom-div">
                 @if (User.Identity != null && (User?.Identity?.IsAuthenticated ?? false)) {
                    @Html.Partial("_ProfileSummary")
                 } else {
@@ -30,15 +40,6 @@
                 @await Component.InvokeAsync($"SearchForm")
             </div>
         </div>
-
-        <!-- Bootstrap core JavaScript
-        ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-        <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>
 

@@ -11,5 +11,6 @@ namespace AndrasTimarTGV.Models.Entities
         public Language DefaultLanguage { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public virtual ICollection<Reservation> Reservations { get; set; }
     }
 }

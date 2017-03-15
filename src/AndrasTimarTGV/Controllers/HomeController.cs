@@ -13,7 +13,7 @@ namespace AndrasTimarTGV.Controllers
         private readonly IBannerTextService bannerTextService;
 
         public HomeController(IBannerTextService bannerTextService)
-        {
+        {            
             this.bannerTextService = bannerTextService;
         }
 

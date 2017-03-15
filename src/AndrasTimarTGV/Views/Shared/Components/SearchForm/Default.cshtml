@@ -1,10 +1,9 @@
 ﻿@model AndrasTimarTGV.Models.ViewModels.TripViewModel
 
 <div><h4>Search</h4></div>
-<div class="text-danger" asp-validation-summary="ModelOnly"></div>
     <form asp-action="List" asp-controller="Trip" method="post">
         <div class="form-group">
-            <label>Departure City</label>
+            <label>Departure City</label>          
             <div>
                 @Html.DropDownListFor(x => x.FromCityId, Model.Cities, "Choose departure city")
             </div>
@@ -16,6 +15,7 @@
             </div>
         </div>
         <div class="form-group">
+            <div><span asp-validation-for="Time" class="text-danger"></span></div>
             <label asp-for="Time"></label>
             <div><span asp-validation-for="Time" class="text-danger"></span>
             </div>

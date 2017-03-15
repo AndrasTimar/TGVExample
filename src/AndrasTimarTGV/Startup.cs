@@ -33,7 +33,7 @@ namespace AndrasTimarTGV
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
-                Configuration["Data:TGVIdentity:ConnectionString"]));            
+                Configuration["Data:TGVMain:ConnectionString"]));            
 
             services.AddIdentity<AppUser, IdentityRole>(options => {
                     options.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
@@ -52,6 +52,8 @@ namespace AndrasTimarTGV
             services.AddTransient<ICityService, CityService>();
             services.AddTransient<IReservationRepository, EFReservationRepository>();
             services.AddTransient<IReservationService, ReservationService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserRepository, UserRepository>();
             services.AddMvc();
             services.AddSession();
         }

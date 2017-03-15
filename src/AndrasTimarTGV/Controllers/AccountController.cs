@@ -148,7 +148,7 @@ namespace AndrasTimarTGV.Controllers
                     ModelState.AddModelError("", "Passwords don't match");
                 }
             }
-            return View(model);
+            return RedirectToAction("Index","Home");
         }
         private void AddErrorsFromResult(IdentityResult result) {
             foreach (IdentityError error in result.Errors) {

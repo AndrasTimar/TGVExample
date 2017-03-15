@@ -2,27 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
+using Microsoft.AspNetCore.Http;
+using SendGrid;
 
 namespace AndrasTimarTGV.Models.Services
 {
     public class ReservationService : IReservationService
     {
-        private IReservationRepository reservationRepository;
-        private ITripService tripService;
+        private readonly IReservationRepository _reservationRepository;
+        private readonly ITripService _tripService;
 
         public ReservationService(IReservationRepository reservationRepository, ITripService tripService)
         {
-            this.reservationRepository = reservationRepository;
-            this.tripService = tripService;
+            this._reservationRepository = reservationRepository;
+            this._tripService = tripService;
         }
 
-        public IEnumerable<Reservation> Reservations => reservationRepository.Reservations;
+        public IEnumerable<Reservation> Reservations => _reservationRepository.Reservations;
         public bool SaveReservation(Reservation reservation)
         {            
-            Trip trip = tripService.GetTripById(reservation.Trip.TripId);
+            Trip trip = _tripService.GetTripById(reservation.Trip.TripId);
             var isFreeEconomy = trip.FreeEconomyPlaces >= reservation.Seats;
             var isFreeBusiness = trip.FreeBusinessPlaces >= reservation.Seats;
             var reserved = false;
@@ -39,33 +42,47 @@ namespace AndrasTimarTGV.Models.Services
 
             if (reserved)
             {
-                reservationRepository.SaveReservation(reservation);
-                tripService.UpdateTripSeats(trip);
-                sendMail(reservation);
+                _reservationRepository.SaveReservation(reservation);
+                _tripService.UpdateTripSeats(trip);
+                SendMail(reservation);
                 return true;
             }
             return false;
         }
 
-        private void sendMail(Reservation reservation)
+        private void SendMail(Reservation reservation)
         {
-            //TODO send email
+            var recipient = reservation.User;
+            var message = new SendGridMessage
+            {
+                From = new MailAddress("TGVSchool@gmail.com", "TGV mail service"),
+                Subject = "Reservation Confirmation"
+            };
+            message.AddTo(recipient.Email);
+            message.Html = "<p>Your reservation is confirmed! </p>" + reservation.ReservationTimeStamp;
+            var apiKey = Environment.GetEnvironmentVariable("SENDMAIL_API_KEY");
+            if (apiKey != null)
+            {
+                var client = new Web(apiKey);
+
+                client.DeliverAsync(message).Wait();
+            }
         }
 
         public IEnumerable<Reservation> GetReservationsByUser(AppUser user)
         {
-            return reservationRepository.GetReservationByUserId(user.Id);
+            return _reservationRepository.GetReservationByUserId(user.Id);
         }
 
         public Reservation GetReservationsById(int reservationId)
         {
-            return reservationRepository.GetReservationById(reservationId);
+            return _reservationRepository.GetReservationById(reservationId);
         }
 
         public void Delete(Reservation reservation)
         {
-            Trip trip = tripService.GetTripById(reservation.Trip.TripId);
-            reservationRepository.Delete(reservation);
+            Trip trip = _tripService.GetTripById(reservation.Trip.TripId);
+            _reservationRepository.Delete(reservation);
             if (reservation.TravelClass == TravelClass.Business)
             {
                 trip.FreeBusinessPlaces += reservation.Seats;
@@ -74,7 +91,7 @@ namespace AndrasTimarTGV.Models.Services
             {
                 trip.FreeEconomyPlaces += reservation.Seats;
             }
-                tripService.UpdateTripSeats(trip);
+                _tripService.UpdateTripSeats(trip);
         }
     }
 }

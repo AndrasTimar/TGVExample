@@ -41,23 +41,21 @@
         <input asp-for="Trip.TripId" hidden="hidden"/>
 
         <div>
+            <div><span asp-validation-for="Seats" class="text-danger"></span></div>
             <label asp-for="Seats"></label>
             <div>
-            <input asp-for="Seats" />
+                <input asp-for="Seats"/>
             </div>
         </div>     
+        <div><span asp-validation-for="TravelClass" class="text-danger"></span></div>
         <label asp-for="TravelClass"></label>
         <select asp-for="TravelClass" class="form-control"
                 asp-items="@new SelectList(Enum.GetNames(typeof(TravelClass)))">
             <option disabled selected value="">Select a Class</option>
         </select>
 
-        </div>
-        <label asp-for="Trip.Time"></label>
-        <div>
-            <span asp-validation-for="Trip.Time" class="text-danger"></span>
-        </div>
-        <input asp-for="Trip.Time" type="date" readonly="readonly"/>
+    </div>
+   
     <div class="form-group">
     </div>
     <div class="left">

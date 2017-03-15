@@ -41,4 +41,16 @@ namespace AndrasTimarTGV.Models.ViewModels
             return selectList;
         }
     }
+    public class DateTimeValidator {
+        public static ValidationResult ValidateTripTime(DateTime dateTime) {
+            if (dateTime.Date < DateTime.Now.Date) {
+                return new ValidationResult("You can not reserve for the past");
+            }
+            if (dateTime.Date > DateTime.Now.Date.AddDays(14)) {
+                return new ValidationResult("Reservations open 14 days before the trip");
+            }
+            return ValidationResult.Success;
+
+        }
+    }
 }

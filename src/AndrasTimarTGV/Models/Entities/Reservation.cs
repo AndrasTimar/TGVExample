@@ -24,8 +24,10 @@ namespace AndrasTimarTGV.Models.Entities
         [Range(1,10)]
         public int Seats { get; set; }
         public bool Active { get; set; } = true;        
-        public TravelClass TravelClass { get; set; }
+        public TravelClass TravelClass { get; set; }      
         public DateTime ReservationTimeStamp { get; set; }
 
     }
+
+    
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Services;
@@ -13,20 +14,20 @@ namespace AndrasTimarTGV.Controllers
 {
     [Authorize]
     public class ReservationController : Microsoft.AspNetCore.Mvc.Controller {
-        private IReservationService reservationService;
-        private ITripService tripService;
-        private UserManager<AppUser> userManager;
-        public ReservationController(IReservationService reservationService, ITripService tripService, UserManager<AppUser> userManager )
+        private readonly IReservationService _reservationService;
+        private readonly ITripService _tripService;
+        private readonly IUserService _userService;
+        public ReservationController(IReservationService reservationService, ITripService tripService, IUserService userService)
         {
-            this.userManager = userManager;
-            this.reservationService = reservationService;
-            this.tripService = tripService;
+            this._userService = userService;
+            this._reservationService = reservationService;
+            this._tripService = tripService;
         }
 
-        public async Task<IActionResult> Reserve(int tripId)
+        public IActionResult Reserve(int tripId)
         {
-            AppUser user = await userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            var trip = tripService.GetTripById(tripId);
+            AppUser user =  _userService.FindAppUserByName(HttpContext.User.Identity.Name);
+            var trip = _tripService.GetTripById(tripId);
             if (trip == null)
             {
                 return RedirectToAction("Index","Home");
@@ -41,9 +42,16 @@ namespace AndrasTimarTGV.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Proceed(Reservation model) {
-            model.User = await userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            model.Trip = tripService.GetTripById(model.Trip.TripId);
+        public  ActionResult Proceed(Reservation model) {
+            model.User =  _userService.FindAppUserByName(HttpContext.User.Identity.Name);
+            model.Trip = _tripService.GetTripById(model.Trip.TripId);
+            if (DateTime.Compare(model.Trip.Time, DateTime.Now) < 0)
+            {
+                ModelState.AddModelError("","You can not reserve for the past!");
+            }else if( DateTime.Compare(model.Trip.Time, DateTime.Now.AddDays(14)) > 0)
+            {
+                ModelState.AddModelError("","Reservations open 14 days before the trip");
+            }
             if (ModelState.IsValid)
             {
                 return View(model);
@@ -51,11 +59,11 @@ namespace AndrasTimarTGV.Controllers
             return View("Reserve",model);
         }
 
-        public async Task<IActionResult> Checkout(Reservation model)
+        public ViewResult Checkout(Reservation model)
         {
-            model.User = await userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            model.Trip = tripService.GetTripById(model.Trip.TripId);
-            if (reservationService.SaveReservation(model))
+            model.User =  _userService.FindAppUserByName(HttpContext.User.Identity.Name);
+            model.Trip = _tripService.GetTripById(model.Trip.TripId);
+            if (_reservationService.SaveReservation(model))
             {
                 return View(model);
             }
@@ -64,19 +72,30 @@ namespace AndrasTimarTGV.Controllers
 
         }
 
-        public async Task<ViewResult> List()
+        public ViewResult List()
         {
-            AppUser user = await userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            return View(reservationService.GetReservationsByUser(user));
+            AppUser user =  _userService.FindAppUserByName(HttpContext.User.Identity.Name);
+            return View(_reservationService.GetReservationsByUser(user));
         }
 
-        public IActionResult Delete(int reservationId) {
-            Reservation reservation = reservationService.GetReservationsById(reservationId);
-            if (reservation != null && reservation.User.UserName == HttpContext.User.Identity.Name) {
-                reservationService.Delete(reservation);
+        public IActionResult Delete(int reservationId) {         
 
+            var user =  _userService.FindAppUserByName(HttpContext?.User?.Identity?.Name);
+
+            Reservation reservation = user.Reservations.FirstOrDefault(x => x.ReservationId == reservationId);
+
+            if (reservation != null)
+            {
+                if (DateTime.Compare(reservation.Trip.Time.AddDays(-3), DateTime.Now) < 0)
+                {
+                    TempData["ERROR"] = "Reservation can not be deleted in the last 3 days!";
+                }
+                else
+                {
+                    _reservationService.Delete(reservation);
+                }
             }
-            return RedirectToAction("List");
+            return RedirectToAction("List");            
         }
     }       
 }

@@ -18,7 +18,7 @@ namespace AndrasTimarTGV.Models.Services
         }
 
         public IEnumerable<Trip> Trips => tripRepository.Trips;
-        public IEnumerable<Trip> GetTripsByCitiesAndDate(int fromCityId, int toCityId, DateTime time)
+        public IEnumerable<Trip> GetTripsByCitIdsAndDate(int fromCityId, int toCityId, DateTime time)
         {
             return tripRepository.GetTripsByDateAndCities(fromCityId, toCityId, time);
         }
