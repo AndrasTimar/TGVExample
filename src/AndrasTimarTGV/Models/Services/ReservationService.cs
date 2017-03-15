@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Mail;
@@ -7,19 +8,23 @@ using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using SendGrid;
 
 namespace AndrasTimarTGV.Models.Services
 {
     public class ReservationService : IReservationService
     {
+        private readonly ILogger<ReservationService> _logger;
         private readonly IReservationRepository _reservationRepository;
         private readonly ITripService _tripService;
-
-        public ReservationService(IReservationRepository reservationRepository, ITripService tripService)
+        private const string EmailTemplateHtmlFile = "email_template.html";
+        private const string ENV_SENGRID_API_KEY = "SENDGRID_API_KEY";
+        public ReservationService(IReservationRepository reservationRepository, ITripService tripService, ILogger<ReservationService> logger)
         {
             this._reservationRepository = reservationRepository;
             this._tripService = tripService;
+            _logger = logger;
         }
 
         public IEnumerable<Reservation> Reservations => _reservationRepository.Reservations;
@@ -59,13 +64,27 @@ namespace AndrasTimarTGV.Models.Services
                 Subject = "Reservation Confirmation"
             };
             message.AddTo(recipient.Email);
-            message.Html = "<p>Your reservation is confirmed! </p>" + reservation.ReservationTimeStamp;
-            var apiKey = Environment.GetEnvironmentVariable("SENDMAIL_API_KEY");
-            if (apiKey != null)
+            try
             {
-                var client = new Web(apiKey);
+                message.Html = File.ReadAllText(EmailTemplateHtmlFile)
+                    .Replace("{{NAME}}", recipient.FirstName + " " + recipient.LastName)
+                    .Replace("{{TRIP_SUMMARY}}", reservation.Trip.ToString());
 
-                client.DeliverAsync(message).Wait();
+                var apiKey = Environment.GetEnvironmentVariable(ENV_SENGRID_API_KEY);
+                if (apiKey != null)
+                {
+                    var client = new Web(apiKey);
+
+                    client.DeliverAsync(message).Wait();
+                }
+                else
+                {
+                    _logger.LogError("Confirmation email was not sent, sendgrid api key not found");
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                _logger.LogError("Confirmation email was not sent, template missing: " + e.Message);
             }
         }
 

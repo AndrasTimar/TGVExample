@@ -15,6 +15,11 @@ namespace AndrasTimarTGV.Models.Entities
         public DateTime Time { get; set; }
         public int FreeEconomyPlaces { get; set; }
         public int FreeBusinessPlaces { get; set; }
-         public int PricePerPerson { get; set; }
+        public int PricePerPerson { get; set; }
+
+        public override string ToString()
+        {
+            return FromCity.Name + " - " + ToCity.Name + " | " + Time.ToString("D");
+        }
     }
 }
