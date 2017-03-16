@@ -10,13 +10,6 @@ namespace AndrasTimarTGV.Controllers
 {
     public class HomeController: Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly IBannerTextService bannerTextService;
-
-        public HomeController(IBannerTextService bannerTextService)
-        {            
-            this.bannerTextService = bannerTextService;
-        }
-
         public ViewResult Index()
         {           
             return View();

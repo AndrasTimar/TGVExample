@@ -13,10 +13,10 @@ namespace AndrasTimarTGV.Controller
 {
     public class TripController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly ITripService tripService;
+        private readonly ITripService _tripService;
         public TripController(ITripService tripService, ICityService cityService)
         {
-            this.tripService = tripService;
+            this._tripService = tripService;
         }
 
         [HttpPost]
@@ -24,7 +24,7 @@ namespace AndrasTimarTGV.Controller
         {
             if (ModelState.IsValid)
             {
-                var resulTrips = tripService.GetTripsByCitIdsAndDate(tripVM.FromCityId, tripVM.ToCityId, tripVM.Time);
+                var resulTrips = _tripService.GetTripsByCitIdsAndDate(tripVM.FromCityId, tripVM.ToCityId, tripVM.Time);
                 return View(resulTrips.OrderBy(x=>x.Time.Hour));
             }
             return RedirectToAction("Index","Home");

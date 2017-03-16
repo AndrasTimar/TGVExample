@@ -52,11 +52,7 @@ namespace AndrasTimarTGV.Controllers
             {
                 ModelState.AddModelError("","Reservations open 14 days before the trip");
             }
-            if (ModelState.IsValid)
-            {
-                return View(model);
-            }
-            return View("Reserve",model);
+            return ModelState.IsValid ? View(model) : View("Reserve",model);
         }
 
         public ViewResult Checkout(Reservation model)
@@ -74,7 +70,7 @@ namespace AndrasTimarTGV.Controllers
 
         public ViewResult List()
         {
-            AppUser user =  _userService.FindAppUserByName(HttpContext.User.Identity.Name);
+            var user =  _userService.FindAppUserByName(HttpContext.User.Identity.Name);
             return View(_reservationService.GetReservationsByUser(user));
         }
 
@@ -82,7 +78,7 @@ namespace AndrasTimarTGV.Controllers
 
             var user =  _userService.FindAppUserByName(HttpContext?.User?.Identity?.Name);
 
-            Reservation reservation = user.Reservations.FirstOrDefault(x => x.ReservationId == reservationId);
+            var reservation = user.Reservations.FirstOrDefault(x => x.ReservationId == reservationId);
 
             if (reservation != null)
             {

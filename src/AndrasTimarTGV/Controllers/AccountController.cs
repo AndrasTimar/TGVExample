@@ -14,16 +14,16 @@ namespace AndrasTimarTGV.Controllers
     [Authorize]
     public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly UserManager<AppUser> userManager;
-        private readonly SignInManager<AppUser> signInManager;
-        private readonly IPasswordHasher<AppUser> passwordHasher;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly IPasswordHasher<AppUser> _passwordHasher;
 
         public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
             IPasswordHasher<AppUser> passHasher)
         {
-            passwordHasher = passHasher;
-            this.userManager = userManager;
-            this.signInManager = signInManager;
+            _passwordHasher = passHasher;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         [AllowAnonymous]
@@ -35,7 +35,7 @@ namespace AndrasTimarTGV.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
@@ -46,11 +46,11 @@ namespace AndrasTimarTGV.Controllers
         {
             if (ModelState.IsValid)
             {
-                AppUser user = await userManager.FindByEmailAsync(details.Email);
+                AppUser user = await _userManager.FindByEmailAsync(details.Email);
                 if (user != null)
                 {
-                    await signInManager.SignOutAsync();
-                    SignInResult result = await signInManager.PasswordSignInAsync(user, details.Password, false, false);
+                    await _signInManager.SignOutAsync();
+                    var result = await _signInManager.PasswordSignInAsync(user, details.Password, false, false);
                     if (result.Succeeded)
                     {
                         return Redirect(returnUrl ?? "/");
@@ -64,7 +64,7 @@ namespace AndrasTimarTGV.Controllers
         [AllowAnonymous]
         public async Task<ViewResult> Register()
         {
-            await signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return View(new CreateUserViewModel());
         }
 
@@ -75,7 +75,7 @@ namespace AndrasTimarTGV.Controllers
             if (ModelState.IsValid) {
                 if (model.Password == model.PasswordConfirm)
                 {
-                    AppUser user = new AppUser
+                    var user = new AppUser
                     {
                         UserName = model.UserName,
                         Email = model.Email,
@@ -84,14 +84,14 @@ namespace AndrasTimarTGV.Controllers
                         LastName =  model.LastName,
 
                     };
-                    IdentityResult result = await userManager.CreateAsync(user, model.Password);
+                    var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
                         TempData["Message"] = "Registration Successful";
                         //TODO: read tempdata in view
                         return RedirectToAction("Index", "Home");
                     }
-                    foreach (IdentityError error in result.Errors)
+                    foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError("", error.Description);
                     }
@@ -106,7 +106,7 @@ namespace AndrasTimarTGV.Controllers
 
         [Authorize]
         public async Task<IActionResult> Edit() {
-            AppUser user = await userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            AppUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             if (user != null) {
                 return View(new CreateUserViewModel()
@@ -127,15 +127,15 @@ namespace AndrasTimarTGV.Controllers
             if (ModelState.IsValid) {
                 if (model.Password == model.PasswordConfirm)
                 {
-                    AppUser user = await userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                    AppUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
                     user.UserName = model.UserName;
                     user.Email = model.Email;
                     user.DefaultLanguage = (Language) Enum.Parse(typeof(Language), model.DefaultLanguage);
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
-                    user.PasswordHash = passwordHasher.HashPassword(user, model.Password);
+                    user.PasswordHash = _passwordHasher.HashPassword(user, model.Password);
 
-                    IdentityResult result = await userManager.UpdateAsync(user);
+                    var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded) {
                         TempData["Message"] = "Changes saved";
                         //TODO: read tempdata in view
@@ -151,7 +151,7 @@ namespace AndrasTimarTGV.Controllers
             return RedirectToAction("Index","Home");
         }
         private void AddErrorsFromResult(IdentityResult result) {
-            foreach (IdentityError error in result.Errors) {
+            foreach (var error in result.Errors) {
                 ModelState.AddModelError("", error.Description);
             }
         }

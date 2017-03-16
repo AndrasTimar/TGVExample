@@ -8,17 +8,17 @@ namespace AndrasTimarTGV.Models
     public class EFBannerTextRepository : IBannerTextRepository
     {
 
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext _context;
 
         public EFBannerTextRepository(ApplicationDbContext ctx)
         {
-            this.context = ctx;
+            this._context = ctx;
         }
 
-        public IEnumerable<BannerText> BannerTexts => context.BannerTexts;
+        public IEnumerable<BannerText> BannerTexts => _context.BannerTexts;
         public BannerText GetBannerTextByLang(Language lang)
         {
-            return context.BannerTexts.FirstOrDefault(x => x.Language == lang);
+            return _context.BannerTexts.FirstOrDefault(x => x.Language == lang);
         }
     }
 }

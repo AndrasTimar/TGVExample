@@ -13,22 +13,22 @@ namespace AndrasTimarTGV.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private UserManager<AppUser> userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        private IPasswordHasher<AppUser> passwordHasher;
-        private IUserValidator<AppUser> userValidator;
-        private IPasswordValidator<AppUser> passwordValidator;
+        private readonly IPasswordHasher<AppUser> _passwordHasher;
+        private readonly IUserValidator<AppUser> _userValidator;
+        private readonly IPasswordValidator<AppUser> _passwordValidator;
 
         public AdminController(UserManager<AppUser> usrMgr, IPasswordHasher<AppUser> passwordHasher,
             IUserValidator<AppUser> usrValidator, IPasswordValidator<AppUser> pwdValidator)
         {
-            userValidator = usrValidator;
-            passwordValidator = pwdValidator;
-            this.passwordHasher = passwordHasher;
-            userManager = usrMgr;
+            _userValidator = usrValidator;
+            _passwordValidator = pwdValidator;
+            this._passwordHasher = passwordHasher;
+            _userManager = usrMgr;
         }
 
-        public ViewResult Index() => View(userManager.Users);
+        public ViewResult Index() => View(_userManager.Users);
 
         public ViewResult Create() => View();
 
@@ -37,17 +37,17 @@ namespace AndrasTimarTGV.Controllers
         {
             if (ModelState.IsValid)
             {
-                AppUser user = new AppUser
+                var user = new AppUser
                 {
                     UserName = model.UserName,
                     Email = model.Email
                 };
-                IdentityResult result = await userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
                 }
-                foreach (IdentityError error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
@@ -58,11 +58,11 @@ namespace AndrasTimarTGV.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            AppUser user = await userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
 
             if (user != null)
             {
-                IdentityResult result = await userManager.DeleteAsync(user);
+                var result = await _userManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -73,12 +73,12 @@ namespace AndrasTimarTGV.Controllers
             {
                 ModelState.AddModelError("", "User Not Found");
             }
-            return View("Index", userManager.Users);
+            return View("Index", _userManager.Users);
         }
 
         public async Task<IActionResult> Edit(string id)
         {
-            AppUser user = await userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
 
             if (user != null)
             {
@@ -90,11 +90,11 @@ namespace AndrasTimarTGV.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(string id, string email, string password)
         {
-            AppUser user = await userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
                 user.Email = email;
-                IdentityResult validEmail = await userValidator.ValidateAsync(userManager, user);
+                var validEmail = await _userValidator.ValidateAsync(_userManager, user);
                 if (!validEmail.Succeeded)
                 {
                     AddErrorsFromResult(validEmail);
@@ -102,10 +102,10 @@ namespace AndrasTimarTGV.Controllers
                 IdentityResult validPass = null;
                 if (!string.IsNullOrEmpty(password))
                 {
-                    validPass = await passwordValidator.ValidateAsync(userManager, user, password);
+                    validPass = await _passwordValidator.ValidateAsync(_userManager, user, password);
                     if (validPass.Succeeded)
                     {
-                        user.PasswordHash = passwordHasher.HashPassword(user, password);
+                        user.PasswordHash = _passwordHasher.HashPassword(user, password);
                     }
                     else
                     {
@@ -116,7 +116,7 @@ namespace AndrasTimarTGV.Controllers
                 if ((validEmail.Succeeded && validPass == null) ||
                     (validEmail.Succeeded && password != string.Empty && validPass.Succeeded))
                 {
-                    IdentityResult result = await userManager.UpdateAsync(user);
+                    var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Index");
@@ -132,7 +132,7 @@ namespace AndrasTimarTGV.Controllers
 
         private void AddErrorsFromResult(IdentityResult result)
         {
-            foreach (IdentityError error in result.Errors)
+            foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error.Description);
             }

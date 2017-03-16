@@ -19,7 +19,7 @@ namespace AndrasTimarTGV.Models.Services
         private readonly IReservationRepository _reservationRepository;
         private readonly ITripService _tripService;
         private const string EmailTemplateHtmlFile = "email_template.html";
-        private const string ENV_SENGRID_API_KEY = "SENDGRID_API_KEY";
+        private const string EnvSengridApiKey = "SENDGRID_API_KEY";
         public ReservationService(IReservationRepository reservationRepository, ITripService tripService, ILogger<ReservationService> logger)
         {
             this._reservationRepository = reservationRepository;
@@ -70,7 +70,7 @@ namespace AndrasTimarTGV.Models.Services
                     .Replace("{{NAME}}", recipient.FirstName + " " + recipient.LastName)
                     .Replace("{{TRIP_SUMMARY}}", reservation.Trip.ToString());
 
-                var apiKey = Environment.GetEnvironmentVariable(ENV_SENGRID_API_KEY);
+                var apiKey = Environment.GetEnvironmentVariable(EnvSengridApiKey);
                 if (apiKey != null)
                 {
                     var client = new Web(apiKey);

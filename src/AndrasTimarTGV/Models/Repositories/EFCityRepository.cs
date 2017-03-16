@@ -8,12 +8,12 @@ namespace AndrasTimarTGV.Models.Repositories
 {
     public class EFCityRepository : ICityRepository
     {
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext _context;
         public EFCityRepository(ApplicationDbContext ctx)
         {
-            context = ctx;
+            _context = ctx;
         }
 
-        public IEnumerable<City> Cities => context.Cities;
+        public IEnumerable<City> Cities => _context.Cities;
     }
 }

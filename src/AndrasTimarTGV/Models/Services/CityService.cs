@@ -9,12 +9,12 @@ namespace AndrasTimarTGV.Models.Services
 {
     public class CityService : ICityService
     {
-        private ICityRepository cityRepository;
-        public IEnumerable<City> Cities => cityRepository.Cities;
+        private readonly ICityRepository _cityRepository;
+        public IEnumerable<City> Cities => _cityRepository.Cities;
 
         public CityService(ICityRepository cityrepo)
         {
-            this.cityRepository = cityrepo;
+            _cityRepository = cityrepo;
         }
     }
 }
