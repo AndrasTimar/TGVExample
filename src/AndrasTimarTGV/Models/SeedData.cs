@@ -68,36 +68,36 @@ namespace AndrasTimarTGV.Models
         private static Random random = new Random();
         private static void AddTripSeedData(ApplicationDbContext context, ILogger _logger)
         {
-            if (!context.Trips.Any()) {
-                foreach (var fromCity in context.Cities)
+            foreach (var fromCity in context.Cities)
+            {
+                foreach (var toCity in context.Cities)
                 {
-                    foreach (var toCity in context.Cities)
+                    if (toCity != fromCity)
                     {
-                        if (toCity != fromCity)
+                        for (int i = 0; i < 20; i++)
                         {
-                            for (int i = 0; i < 20; i++)
+                            DateTime date = DateTime.Today;
+
+                            for (int j = 0; j < random.Next(1, 4); j++)
                             {
-                                DateTime date = DateTime.Today;
+                                date = date.AddMinutes(random.Next(60, 1800));
 
-                                for (int j = 0; j < random.Next(1,4); j++) {
-                                    date = date.AddMinutes(random.Next(60, 1800));
-
-                                    context.Add(new Trip {
-                                        FreeBusinessPlaces = 50,
-                                        FromCity = fromCity,
-                                        ToCity = toCity,
-                                        PricePerPerson = 20+random.Next(10,36),
-                                        Time = date.AddDays(i),
-                                        FreeEconomyPlaces = 300,
-                                    });
-                                }
+                                context.Add(new Trip
+                                {
+                                    FreeBusinessPlaces = 50,
+                                    FromCity = fromCity,
+                                    ToCity = toCity,
+                                    PricePerPerson = 20 + random.Next(10, 36),
+                                    Time = date.AddDays(i),
+                                    FreeEconomyPlaces = 300,
+                                });
                             }
-                                
                         }
+
                     }
                 }
-                context.SaveChanges();
             }
+            context.SaveChanges();            
         }
     }
 }
