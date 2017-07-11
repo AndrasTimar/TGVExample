@@ -1,20 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6DD40356-F7B3-46EA-ACC7-6FC3AA69B5D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DCA6DF8B-A274-4236-996A-923E29C2B067}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AndrasTimarTGV", "src\AndrasTimarTGV\AndrasTimarTGV.xproj", "{DBC72994-F15A-4C1D-A182-58CCB4BBD34C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{29DD1EBD-200A-414E-A8F4-FCA9E4065AF9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AndrasTimarTGV.Tests", "AndrasTimarTGV.Tests\AndrasTimarTGV.Tests.xproj", "{952100F2-A02A-4A11-8FB2-2CC811A9740F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AndrasTimarTGV", "src\AndrasTimarTGV\AndrasTimarTGV.csproj", "{DBC72994-F15A-4C1D-A182-58CCB4BBD34C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AndrasTimarTGV.Tests", "AndrasTimarTGV.Tests\AndrasTimarTGV.Tests.csproj", "{952100F2-A02A-4A11-8FB2-2CC811A9740F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
