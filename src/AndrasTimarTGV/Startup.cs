@@ -41,7 +41,8 @@ namespace AndrasTimarTGV
                     options.Password.RequireDigit = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
-                    options.Password.RequireLowercase = false;                    
+                    options.Password.RequireLowercase = false;
+                    options.User.RequireUniqueEmail = true;
                 }
             ).AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddTransient<IBannerTextRepository, EFBannerTextRepository>();
