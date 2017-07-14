@@ -86,9 +86,9 @@ namespace AndrasTimarTGV.Controllers
             {
                 TempData["ERROR"] = ex.Message;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {            
-                TempData["ERROR"] = ex.Message;
+                TempData["ERROR"] = "Invalid trip";
             }
 
             return RedirectToAction("List");

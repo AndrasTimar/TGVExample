@@ -27,8 +27,8 @@ namespace AndrasTimarTGV.Tests
             Mock<IReservationRepository> repo = new Mock<IReservationRepository>();
             repo.Setup(x => x.GetReservationById(It.IsAny<int>())).Returns(testReservation);
             Mock<ITripService> tripService = new Mock<ITripService>();
-            ReservationService reservationService = new ReservationService(repo.Object, tripService.Object, null);
 
+            ReservationService reservationService = new ReservationService(repo.Object, tripService.Object, null);          
             Assert.Throws<TooLateReservationException>(() => reservationService.Delete(testUser, 1));
 
             testReservation.Trip.Time = DateTime.Now.AddDays(2);

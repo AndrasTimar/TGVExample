@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AndrasTimarTGV.Models.Entities;
@@ -10,7 +11,8 @@ namespace AndrasTimarTGV.Models
 {
     public class SeedData
     {
-        public static void AddSeedData(IApplicationBuilder app) {
+        public static void AddSeedData(IApplicationBuilder app)
+        {
             ApplicationDbContext context = app.ApplicationServices.GetRequiredService<ApplicationDbContext>();
             ILogger logger = app.ApplicationServices.GetRequiredService<ILogger<SeedData>>();
             AddIntroductionSeedDataToDb(context, logger);
@@ -48,7 +50,7 @@ namespace AndrasTimarTGV.Models
                 catch (FileNotFoundException exception)
                 {
                     logger.LogError("BannerText file was not found : " + exception.FileName +
-                                     ". BannerText table will be empty for this lang");
+                                    ". BannerText table will be empty for this lang");
                 }
             }
 
@@ -75,6 +77,7 @@ namespace AndrasTimarTGV.Models
 
         private static void AddTripSeedData(ApplicationDbContext context, ILogger _logger)
         {
+            List<Trip> trips = new List<Trip>();
             foreach (var fromCity in context.Cities)
             {
                 foreach (var toCity in context.Cities)
@@ -88,21 +91,26 @@ namespace AndrasTimarTGV.Models
                             for (int j = 0; j < random.Next(1, 4); j++)
                             {
                                 date = date.AddMinutes(random.Next(60, 1800));
-
-                                context.Add(new Trip
+                                bool existing = context.Trips
+                                    .Any(x => x.Time.Day == date.Day && x.FromCity == fromCity && x.ToCity == toCity);
+                                if (existing)
                                 {
-                                    FreeBusinessPlaces = 50,
-                                    FromCity = fromCity,
-                                    ToCity = toCity,
-                                    PricePerPerson = 20 + random.Next(10, 36),
-                                    Time = date.AddDays(i),
-                                    FreeEconomyPlaces = 300,
-                                });
+                                    trips.Add(new Trip
+                                    {
+                                        FreeBusinessPlaces = 12,
+                                        FromCity = fromCity,
+                                        ToCity = toCity,
+                                        PricePerPerson = 20 + random.Next(10, 36),
+                                        Time = date.AddDays(i),
+                                        FreeEconomyPlaces = 300,
+                                    });
+                                }
                             }
                         }
                     }
                 }
             }
+            context.AddRange(trips);
             context.SaveChanges();
         }
     }

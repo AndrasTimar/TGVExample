@@ -114,23 +114,27 @@ namespace AndrasTimarTGV.Models.Services
         public void Delete(AppUser user, int reservationId)
         {
             Reservation reservation = ReservationRepository.GetReservationById(reservationId);
-          
+
             if (reservation != null)
             {
-                if (reservation.User != user) {
-                    throw new InvalidOperationException("Trip doesnt belong to logged in user");
+                if (reservation.User != user)
+                {
+                    throw new InvalidOperationException("Trip does not belong to logged in user");
                 }
                 if (DateTime.Compare(reservation.Trip.Time.AddDays(-3), DateTime.Now) < 0)
                 {
                     throw new TooLateReservationException("Reservations can not be deleted in the last 3 days!");
                 }
-                
+
 
                 Delete(reservation, reservation.Trip);
 
                 TripService.UpdateTripSeats(reservation.Trip);
             }
-            throw new InvalidOperationException("Trip does not exist");
+            else
+            {
+                throw new InvalidOperationException("Trip does not exist");
+            }
         }
     }
 }
