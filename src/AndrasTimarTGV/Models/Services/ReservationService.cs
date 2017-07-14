@@ -124,12 +124,11 @@ namespace AndrasTimarTGV.Models.Services
                 {
                     throw new TooLateReservationException("Reservations can not be deleted in the last 3 days!");
                 }
+                
 
-                Trip trip = TripService.GetTripById(reservation.Trip.TripId);
+                Delete(reservation, reservation.Trip);
 
-                Delete(reservation, trip);
-
-                TripService.UpdateTripSeats(trip);
+                TripService.UpdateTripSeats(reservation.Trip);
             }
             throw new InvalidOperationException("Trip does not exist");
         }
