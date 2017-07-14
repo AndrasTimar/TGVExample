@@ -1,7 +1,9 @@
-﻿.custom-div {
+﻿
+.custom-div {
     border-radius: 10%;
     float: right;
     margin: 1%;
+    padding: 10px;
 }
 
 .side-component {
@@ -16,6 +18,7 @@
     border-color: crimson;
     -ms-border-radius: 10%;
     border-radius: 10%;
+    margin:5px;
 }
 
 .banner {
@@ -33,4 +36,7 @@
     color: white;
     font-weight: bolder;
     font-family: Serif;
+}
+.link-nodec:link{
+    text-decoration: none;
 }

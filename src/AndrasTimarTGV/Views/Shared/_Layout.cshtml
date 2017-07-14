@@ -12,23 +12,23 @@
     <title>SportsStore</title>
 </head>
 <body>
-    <a href="/home/index">
-        <div class="jumbotron banner">
-            <div class="container text-left">
+    
+    <div class="jumbotron banner card">
+            <div class="container">
                 @await Component.InvokeAsync($"Banner")
             </div>
         </div>
-    </a>
-<div class="container-fluid">      
-    <style>
-        .input-validation-error {
-            border-color: red;
-            background-color: #fee;
-        }
-    </style>
-    <div class="well col-xs-11 col-md-2 custom-div">
+    <div class="site-content">
+        <div class="container-fluid">
+            <style>
+                .input-validation-error {
+                    border-color: red;
+                    background-color: #fee;
+                }
+            </style>
+            <div class="well col-xs-11 col-md-2 custom-div">
                 @if (User.Identity != null && (User?.Identity?.IsAuthenticated ?? false)) {
-                   @Html.Partial("_ProfileSummary")
+                    @Html.Partial("_ProfileSummary")
                 } else {
                     @await Component.InvokeAsync($"LoginForm")
                 }
@@ -40,6 +40,7 @@
                 @await Component.InvokeAsync($"SearchForm")
             </div>
         </div>
+    </div>
 </body>
 </html>
 

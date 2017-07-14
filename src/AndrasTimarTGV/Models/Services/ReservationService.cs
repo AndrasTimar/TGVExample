@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Mail;
-using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using SendGrid;
 
@@ -15,22 +11,25 @@ namespace AndrasTimarTGV.Models.Services
 {
     public class ReservationService : IReservationService
     {
-        private readonly ILogger<ReservationService> _logger;
-        private readonly IReservationRepository _reservationRepository;
-        private readonly ITripService _tripService;
+        private readonly ILogger<ReservationService> Logger;
+        private readonly IReservationRepository ReservationRepository;
+        private readonly ITripService TripService;
         private const string EmailTemplateHtmlFile = "email_template.html";
         private const string EnvSengridApiKey = "SENDGRID_API_KEY";
-        public ReservationService(IReservationRepository reservationRepository, ITripService tripService, ILogger<ReservationService> logger)
+
+        public ReservationService(IReservationRepository reservationRepository, ITripService tripService,
+            ILogger<ReservationService> logger)
         {
-            this._reservationRepository = reservationRepository;
-            this._tripService = tripService;
-            _logger = logger;
+            ReservationRepository = reservationRepository;
+            TripService = tripService;
+            Logger = logger;
         }
 
-        public IEnumerable<Reservation> Reservations => _reservationRepository.Reservations;
+        public IEnumerable<Reservation> Reservations => ReservationRepository.Reservations;
+
         public bool SaveReservation(Reservation reservation)
-        {            
-            Trip trip = _tripService.GetTripById(reservation.Trip.TripId);
+        {
+            Trip trip = TripService.GetTripById(reservation.Trip.TripId);
             var isFreeEconomy = trip.FreeEconomyPlaces >= reservation.Seats;
             var isFreeBusiness = trip.FreeBusinessPlaces >= reservation.Seats;
             var reserved = false;
@@ -39,7 +38,7 @@ namespace AndrasTimarTGV.Models.Services
                 trip.FreeBusinessPlaces -= reservation.Seats;
                 reserved = true;
             }
-            else if(reservation.TravelClass == TravelClass.Economy && isFreeEconomy)
+            else if (reservation.TravelClass == TravelClass.Economy && isFreeEconomy)
             {
                 trip.FreeEconomyPlaces -= reservation.Seats;
                 reserved = true;
@@ -47,8 +46,8 @@ namespace AndrasTimarTGV.Models.Services
 
             if (reserved)
             {
-                _reservationRepository.SaveReservation(reservation);
-                _tripService.UpdateTripSeats(trip);
+                ReservationRepository.SaveReservation(reservation);
+                TripService.UpdateTripSeats(trip);
                 SendMail(reservation);
                 return true;
             }
@@ -79,29 +78,29 @@ namespace AndrasTimarTGV.Models.Services
                 }
                 else
                 {
-                    _logger.LogError("Confirmation email was not sent, sendgrid api key not found");
+                    Logger.LogError("Confirmation email was not sent, sendgrid api key not found");
                 }
             }
             catch (FileNotFoundException e)
             {
-                _logger.LogError("Confirmation email was not sent, template missing: " + e.Message);
+                Logger.LogError("Confirmation email was not sent, template missing: " + e.Message);
             }
         }
 
         public IEnumerable<Reservation> GetReservationsByUser(AppUser user)
         {
-            return _reservationRepository.GetReservationByUserId(user.Id);
+            return ReservationRepository.GetReservationByUserId(user.Id);
         }
 
         public Reservation GetReservationsById(int reservationId)
         {
-            return _reservationRepository.GetReservationById(reservationId);
+            return ReservationRepository.GetReservationById(reservationId);
         }
 
         public void Delete(Reservation reservation)
         {
-            Trip trip = _tripService.GetTripById(reservation.Trip.TripId);
-            _reservationRepository.Delete(reservation);
+            Trip trip = TripService.GetTripById(reservation.Trip.TripId);
+            ReservationRepository.Delete(reservation);
             if (reservation.TravelClass == TravelClass.Business)
             {
                 trip.FreeBusinessPlaces += reservation.Seats;
@@ -110,7 +109,7 @@ namespace AndrasTimarTGV.Models.Services
             {
                 trip.FreeEconomyPlaces += reservation.Seats;
             }
-                _tripService.UpdateTripSeats(trip);
+            TripService.UpdateTripSeats(trip);
         }
     }
 }

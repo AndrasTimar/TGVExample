@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace AndrasTimarTGV.Models
+namespace AndrasTimarTGV.Models.Entities
 {
     public enum Language {
-        fr = 0,
-        en = 1,
-        ne = 2
+        Fr = 0,
+        En = 1,
+        Ne = 2
     }
 
     public class BannerText

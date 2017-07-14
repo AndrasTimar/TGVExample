@@ -46,11 +46,11 @@ namespace AndrasTimarTGV
             ).AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddTransient<IBannerTextRepository, EFBannerTextRepository>();
             services.AddTransient<IBannerTextService, BannerTextService>();
-            services.AddTransient<ITripRepository, EFTripRepository>();
+            services.AddTransient<ITripRepository, EfTripRepository>();
             services.AddTransient<ITripService, TripService>();
-            services.AddTransient<ICityRepository, EFCityRepository>();
+            services.AddTransient<ICityRepository, EfCityRepository>();
             services.AddTransient<ICityService, CityService>();
-            services.AddTransient<IReservationRepository, EFReservationRepository>();
+            services.AddTransient<IReservationRepository, EfReservationRepository>();
             services.AddTransient<IReservationService, ReservationService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserRepository, UserRepository>();

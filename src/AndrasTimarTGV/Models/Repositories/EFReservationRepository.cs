@@ -1,39 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AndrasTimarTGV.Models.Repositories
 {
-    public class EFReservationRepository : IReservationRepository
+    public class EfReservationRepository : IReservationRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext Context;
 
-        public EFReservationRepository(ApplicationDbContext ctx) {
-            _context = ctx;
+        public EfReservationRepository(ApplicationDbContext ctx)
+        {
+            Context = ctx;
         }
-        public IEnumerable<Reservation>  Reservations => _context.Reservations;
+
+        public IEnumerable<Reservation> Reservations => Context.Reservations;
+
         public void SaveReservation(Reservation reservation)
         {
-            _context.Reservations.Add(reservation);
-            _context.SaveChanges();
+            Context.Reservations.Add(reservation);
+            Context.SaveChanges();
         }
 
         public IEnumerable<Reservation> GetReservationByUserId(string userId)
         {
-            return
-                _context.Reservations.Where(x => x.User.Id == userId)
-                    .Include(x => x.Trip)
-                    .ThenInclude(x => x.ToCity)
-                    .Include(x => x.Trip)
-                    .ThenInclude(x => x.FromCity);
+            return Context.Reservations.Where(x => x.User.Id == userId)
+                .Include(x => x.Trip)
+                .ThenInclude(x => x.ToCity)
+                .Include(x => x.Trip)
+                .ThenInclude(x => x.FromCity);
         }
 
         public Reservation GetReservationById(int reservationId)
         {
-            return _context.Reservations.Where(x => x.ReservationId == reservationId)
+            return Context.Reservations.Where(x => x.ReservationId == reservationId)
                 .Include(x => x.User)
                 .Include(x => x.Trip)
                 .ThenInclude(x => x.FromCity)
@@ -43,9 +43,9 @@ namespace AndrasTimarTGV.Models.Repositories
 
         public void Delete(Reservation reservation)
         {
-            Reservation entry = _context.Reservations.FirstOrDefault(x => x.ReservationId == reservation.ReservationId);
-            _context.Remove(entry);
-            _context.SaveChanges();
+            Reservation entry = Context.Reservations.FirstOrDefault(x => x.ReservationId == reservation.ReservationId);
+            Context.Remove(entry);
+            Context.SaveChanges();
         }
     }
 }

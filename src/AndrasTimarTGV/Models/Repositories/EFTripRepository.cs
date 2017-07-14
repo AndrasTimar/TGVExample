@@ -1,30 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AndrasTimarTGV.Models.Repositories
 {
-    public class EFTripRepository : ITripRepository
+    public class EfTripRepository : ITripRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext Context;
 
-        public EFTripRepository(ApplicationDbContext ctx)
+        public EfTripRepository(ApplicationDbContext ctx)
         {
-            _context = ctx;
+            Context = ctx;
         }
 
-        public IEnumerable<Trip> Trips => _context.Trips
+        public IEnumerable<Trip> Trips => Context.Trips
             .Include(x=>x.FromCity)
             .Include(x=>x.ToCity);
 
         public IEnumerable<Trip> GetTripsByDateAndCities(int fromCityId, int toCityId, DateTime time)
         {
-            Trip trip = _context.Trips.First();
-                      
-            return _context.Trips.Include(x => x.FromCity).Include(x => x.ToCity).Where(
+            return Context.Trips.Include(x => x.FromCity).Include(x => x.ToCity).Where(
                 x => x.ToCity.CityId == toCityId
                 && x.FromCity.CityId == fromCityId 
                 && x.Time.Date == time.Date);
@@ -32,17 +29,17 @@ namespace AndrasTimarTGV.Models.Repositories
 
         public Trip GetTipById(int tripId)
         {
-            return _context.Trips.Include(x=>x.FromCity).Include(x=>x.ToCity).FirstOrDefault(x => x.TripId == tripId);
+            return Context.Trips.Include(x=>x.FromCity).Include(x=>x.ToCity).FirstOrDefault(x => x.TripId == tripId);
         }
 
         public void UpdateTripSeats(Trip trip)
         {
-            Trip entry = _context.Trips.FirstOrDefault(x => x.TripId == trip.TripId);
+            Trip entry = Context.Trips.FirstOrDefault(x => x.TripId == trip.TripId);
             if (entry != null)
             {
                 entry.FreeBusinessPlaces = trip.FreeBusinessPlaces;
                 entry.FreeEconomyPlaces = trip.FreeEconomyPlaces;
-                _context.SaveChanges();
+                Context.SaveChanges();
             }         
             
         }

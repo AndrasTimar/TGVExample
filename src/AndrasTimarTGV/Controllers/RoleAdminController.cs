@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.ViewModels;
@@ -15,17 +13,17 @@ namespace AndrasTimarTGV.Controllers
     [Authorize(Roles = "Admin")]
     public class RoleAdminController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<IdentityRole> RoleManager;
+        private readonly UserManager<AppUser> UserManager;
 
         public RoleAdminController(RoleManager<IdentityRole> rolMgr,
             UserManager<AppUser> userMgr)
         {
-            _roleManager = rolMgr;
-            _userManager = userMgr;
+            RoleManager = rolMgr;
+            UserManager = userMgr;
         }
 
-        public ViewResult Index() => View(_roleManager.Roles);
+        public ViewResult Index() => View(RoleManager.Roles);
 
         public IActionResult Create() => View();
 
@@ -34,7 +32,7 @@ namespace AndrasTimarTGV.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(name));
+                IdentityResult result = await RoleManager.CreateAsync(new IdentityRole(name));
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -50,10 +48,10 @@ namespace AndrasTimarTGV.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            var role = await _roleManager.FindByIdAsync(id);
+            var role = await RoleManager.FindByIdAsync(id);
             if (role != null)
             {
-                var result = await _roleManager.DeleteAsync(role);
+                var result = await RoleManager.DeleteAsync(role);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -65,26 +63,27 @@ namespace AndrasTimarTGV.Controllers
             }
             else
             {
-                ModelState.AddModelError("","No role found");
+                ModelState.AddModelError("", "No role found");
             }
-            return View("Index", _roleManager.Roles);
+            return View("Index", RoleManager.Roles);
         }
 
         private void AddErrorsFromResult(IdentityResult result)
         {
-            foreach (var error in result.Errors) {
+            foreach (var error in result.Errors)
+            {
                 ModelState.AddModelError("", error.Description);
             }
         }
 
         public async Task<IActionResult> Edit(string id)
         {
-            var role = await _roleManager.FindByIdAsync(id);
+            var role = await RoleManager.FindByIdAsync(id);
             var members = new List<AppUser>();
             var nonMembers = new List<AppUser>();
-            foreach (var user in _userManager.Users)
+            foreach (var user in UserManager.Users)
             {
-                var list = await _userManager.IsInRoleAsync(user, role.Name) ? members : nonMembers;
+                var list = await UserManager.IsInRoleAsync(user, role.Name) ? members : nonMembers;
                 list.Add(user);
             }
             return View(new RoleEditModel
@@ -101,24 +100,24 @@ namespace AndrasTimarTGV.Controllers
             if (ModelState.IsValid)
             {
                 IdentityResult result;
-                foreach (var userId in model.IdsToAdd ?? new string[]{})
+                foreach (var userId in model.IdsToAdd ?? new string[] { })
                 {
-                    var user = await _userManager.FindByIdAsync(userId);
+                    var user = await UserManager.FindByIdAsync(userId);
                     if (user != null)
                     {
-                        result = await _userManager.AddToRoleAsync(user,model.RoleName);
+                        result = await UserManager.AddToRoleAsync(user, model.RoleName);
                         if (!result.Succeeded)
                         {
                             AddErrorsFromResult(result);
                         }
                     }
                 }
-                foreach (var userId in model.IdsToDelete ?? new string[] {})
+                foreach (var userId in model.IdsToDelete ?? new string[] { })
                 {
-                    var user = await _userManager.FindByIdAsync(userId);
+                    var user = await UserManager.FindByIdAsync(userId);
                     if (user != null)
                     {
-                        result = await _userManager.RemoveFromRoleAsync(user, model.RoleName);
+                        result = await UserManager.RemoveFromRoleAsync(user, model.RoleName);
                         if (!result.Succeeded)
                         {
                             AddErrorsFromResult(result);
@@ -126,9 +125,8 @@ namespace AndrasTimarTGV.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }           
+            }
             return await Edit(model.RoleId);
         }
     }
 }
-

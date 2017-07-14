@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -14,17 +11,19 @@ namespace AndrasTimarTGV.Models.ViewModels
         // TODO: validation on this ViewModel
         [Required]
         public int FromCityId { get; set; }
+
         [Required]
         public int ToCityId { get; set; }
+
         [Required]
         public DateTime Time { get; set; } = DateTime.Today;
 
-        public IEnumerable<SelectListItem> Cities { get; set; }        
+        public IEnumerable<SelectListItem> Cities { get; set; }
 
         public TripViewModel()
         {
-            
         }
+
         public TripViewModel(IEnumerable<City> cities)
         {
             Cities = ConvertToSelectList(cities);
@@ -32,25 +31,29 @@ namespace AndrasTimarTGV.Models.ViewModels
 
         private IEnumerable<SelectListItem> ConvertToSelectList(IEnumerable<City> cities)
         {
-           var selectList = new List<SelectListItem>();
+            var selectList = new List<SelectListItem>();
             foreach (City city in cities)
             {
-                 selectList.Add(new SelectListItem {Text=city.Name, Selected = false, Value = city.CityId.ToString()});
+                selectList.Add(new SelectListItem {Text = city.Name, Selected = false, Value = city.CityId.ToString()});
             }
 
             return selectList;
         }
     }
-    public class DateTimeValidator {
-        public static ValidationResult ValidateTripTime(DateTime dateTime) {
-            if (dateTime.Date < DateTime.Now.Date) {
+
+    public class DateTimeValidator
+    {
+        public static ValidationResult ValidateTripTime(DateTime dateTime)
+        {
+            if (dateTime.Date < DateTime.Now.Date)
+            {
                 return new ValidationResult("You can not reserve for the past");
             }
-            if (dateTime.Date > DateTime.Now.Date.AddDays(14)) {
+            if (dateTime.Date > DateTime.Now.Date.AddDays(14))
+            {
                 return new ValidationResult("Reservations open 14 days before the trip");
             }
             return ValidationResult.Success;
-
         }
     }
 }

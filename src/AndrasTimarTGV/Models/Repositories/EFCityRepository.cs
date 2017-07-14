@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using AndrasTimarTGV.Models.Entities;
 
 namespace AndrasTimarTGV.Models.Repositories
 {
-    public class EFCityRepository : ICityRepository
+    public class EfCityRepository : ICityRepository
     {
-        private readonly ApplicationDbContext _context;
-        public EFCityRepository(ApplicationDbContext ctx)
+        private readonly ApplicationDbContext Context;
+
+        public EfCityRepository(ApplicationDbContext ctx)
         {
-            _context = ctx;
+            Context = ctx;
         }
 
-        public IEnumerable<City> Cities => _context.Cities;
+        public IEnumerable<City> Cities => Context.Cities;
     }
 }

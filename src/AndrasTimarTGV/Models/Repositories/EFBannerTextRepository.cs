@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using AndrasTimarTGV.Models.Entities;
+using AndrasTimarTGV.Models.Repositories;
 
 namespace AndrasTimarTGV.Models
 {
     public class EFBannerTextRepository : IBannerTextRepository
     {
-
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext Context;
 
         public EFBannerTextRepository(ApplicationDbContext ctx)
         {
-            this._context = ctx;
+            Context = ctx;
         }
 
-        public IEnumerable<BannerText> BannerTexts => _context.BannerTexts;
+        public IEnumerable<BannerText> BannerTexts => Context.BannerTexts;
+
         public BannerText GetBannerTextByLang(Language lang)
         {
-            return _context.BannerTexts.FirstOrDefault(x => x.Language == lang);
+            return Context.BannerTexts.FirstOrDefault(x => x.Language == lang);
         }
     }
 }
