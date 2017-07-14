@@ -10,6 +10,6 @@ namespace AndrasTimarTGV.Models.Services
 
         IEnumerable<Reservation> GetReservationsByUser(AppUser user);
         Reservation GetReservationsById(int reservationId);
-        void Delete(Reservation reservation);
+        void Delete(AppUser user, int reservationId);
     }
 }

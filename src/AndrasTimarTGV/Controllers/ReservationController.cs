@@ -2,6 +2,7 @@
 using System.Linq;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Services;
+using AndrasTimarTGV.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -77,19 +78,19 @@ namespace AndrasTimarTGV.Controllers
         {
             var user = UserService.FindAppUserByName(HttpContext?.User?.Identity?.Name);
 
-            var reservation = user.Reservations.FirstOrDefault(x => x.ReservationId == reservationId);
-
-            if (reservation != null)
+            try
             {
-                if (DateTime.Compare(reservation.Trip.Time.AddDays(-3), DateTime.Now) < 0)
-                {
-                    TempData["ERROR"] = "Reservation can not be deleted in the last 3 days!";
-                }
-                else
-                {
-                    ReservationService.Delete(reservation);
-                }
+                ReservationService.Delete(user, reservationId);
             }
+            catch (TooLateReservationException ex)
+            {
+                TempData["ERROR"] = ex.Message;
+            }
+            catch (InvalidOperationException ex)
+            {            
+                TempData["ERROR"] = ex.Message;
+            }
+
             return RedirectToAction("List");
         }
     }

@@ -63,8 +63,18 @@ namespace AndrasTimarTGV.Controllers
         public async Task<ViewResult> Register()
         {
             await SignInManager.SignOutAsync();
-            return View(new CreateUserViewModel());
+            var createUserViewModel = new CreateUserViewModel();
+            try
+            {
+                return View("Register", createUserViewModel);
+            }
+            catch (Exception ex)
+            {
+                string a = ex.Message;
+            }
+            return null;
         }
+
 
         [HttpPost]
         [AllowAnonymous]
@@ -72,8 +82,9 @@ namespace AndrasTimarTGV.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 if (model.Password == model.PasswordConfirm)
-                {
+                {                    
                     var user = new AppUser
                     {
                         UserName = model.UserName,
@@ -82,11 +93,10 @@ namespace AndrasTimarTGV.Controllers
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                     };
-                    var result = await UserManager.CreateAsync(user, model.Password);
+                    IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
                         TempData["Message"] = "Registration Successful";
-                        //TODO: read tempdata in view
                         return RedirectToAction("Index", "Home");
                     }
                     foreach (var error in result.Errors)

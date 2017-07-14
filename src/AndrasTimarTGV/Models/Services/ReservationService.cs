@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Mail;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
+using AndrasTimarTGV.Util;
 using Microsoft.Extensions.Logging;
 using SendGrid;
 
@@ -97,9 +98,8 @@ namespace AndrasTimarTGV.Models.Services
             return ReservationRepository.GetReservationById(reservationId);
         }
 
-        public void Delete(Reservation reservation)
+        private void Delete(Reservation reservation, Trip trip)
         {
-            Trip trip = TripService.GetTripById(reservation.Trip.TripId);
             ReservationRepository.Delete(reservation);
             if (reservation.TravelClass == TravelClass.Business)
             {
@@ -109,7 +109,29 @@ namespace AndrasTimarTGV.Models.Services
             {
                 trip.FreeEconomyPlaces += reservation.Seats;
             }
-            TripService.UpdateTripSeats(trip);
+        }
+
+        public void Delete(AppUser user, int reservationId)
+        {
+            Reservation reservation = ReservationRepository.GetReservationById(reservationId);
+          
+            if (reservation != null)
+            {
+                if (reservation.User != user) {
+                    throw new InvalidOperationException("Trip doesnt belong to logged in user");
+                }
+                if (DateTime.Compare(reservation.Trip.Time.AddDays(-3), DateTime.Now) < 0)
+                {
+                    throw new TooLateReservationException("Reservations can not be deleted in the last 3 days!");
+                }
+
+                Trip trip = TripService.GetTripById(reservation.Trip.TripId);
+
+                Delete(reservation, trip);
+
+                TripService.UpdateTripSeats(trip);
+            }
+            throw new InvalidOperationException("Trip does not exist");
         }
     }
 }
