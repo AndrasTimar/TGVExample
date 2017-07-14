@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AndrasTimarTGV.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AndrasTimarTGV.Components
 {
@@ -6,7 +7,7 @@ namespace AndrasTimarTGV.Components
     {
         public IViewComponentResult Invoke()
         {
-            return View();
+            return View(new LoginUserViewModel());
         }
     }
 }
