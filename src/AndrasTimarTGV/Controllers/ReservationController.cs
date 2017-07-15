@@ -45,27 +45,37 @@ namespace AndrasTimarTGV.Controllers
         {
             model.User = UserService.FindAppUserByName(HttpContext.User.Identity.Name);
             model.Trip = TripService.GetTripById(model.Trip.TripId);
-            if (DateTime.Compare(model.Trip.Time, DateTime.Now) < 0)
+            try
             {
-                ModelState.AddModelError("", "You can not reserve for the past!");
+                ReservationService.ValidateReservationDate(model);
             }
-            else if (DateTime.Compare(model.Trip.Time, DateTime.Now.AddDays(14)) > 0)
+            catch (ReservationException ex)
             {
-                ModelState.AddModelError("", "Reservations open 14 days before the trip");
+                ModelState.AddModelError("", ex.Message);
             }
+           
             return ModelState.IsValid ? View(model) : View("Reserve", model);
         }
 
-        public ViewResult Checkout(Reservation model)
+        [HttpPost]
+        public IActionResult Checkout(Reservation model)
         {
-            model.User = UserService.FindAppUserByName(HttpContext.User.Identity.Name);
-            model.Trip = TripService.GetTripById(model.Trip.TripId);
-            if (ReservationService.SaveReservation(model))
+            try
             {
+                model.User = UserService.FindAppUserByName(HttpContext.User.Identity.Name);
+                model.Trip = TripService.GetTripById(model.Trip.TripId);
+                ReservationService.SaveReservation(model);
                 return View(model);
             }
-            ModelState.AddModelError("", "Not enough free seats");
-            return View("Reserve", model);
+            catch (ReservationException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View("Reserve", model);
+            }
+            catch (NullReferenceException ex)
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ViewResult List()
@@ -74,6 +84,7 @@ namespace AndrasTimarTGV.Controllers
             return View(ReservationService.GetReservationsByUser(user));
         }
 
+        [HttpPost]
         public IActionResult Delete(int reservationId)
         {
             var user = UserService.FindAppUserByName(HttpContext?.User?.Identity?.Name);
@@ -82,7 +93,7 @@ namespace AndrasTimarTGV.Controllers
             {
                 ReservationService.Delete(user, reservationId);
             }
-            catch (TooLateReservationException ex)
+            catch (ReservationOutOfTimeframeException ex)
             {
                 TempData["ERROR"] = ex.Message;
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
+using AndrasTimarTGV.Util;
 
 namespace AndrasTimarTGV.Models.Services
 {
@@ -29,6 +30,32 @@ namespace AndrasTimarTGV.Models.Services
         public void UpdateTripSeats(Trip trip)
         {
             TripRepository.UpdateTripSeats(trip);
+        }
+
+        public void DecreaseTripSeatsByReservation(Reservation reservation)
+        {
+            if (reservation.TravelClass == TravelClass.Business && reservation.Trip.FreeBusinessPlaces >= reservation.Seats) {
+                reservation.Trip.FreeBusinessPlaces -= reservation.Seats;
+            } else if (reservation.TravelClass == TravelClass.Economy && reservation.Trip.FreeEconomyPlaces >= reservation.Seats) {
+                reservation.Trip.FreeEconomyPlaces -= reservation.Seats;
+            } else {
+                throw new NotEnoughSeatsException("Not enough seats left for your reservation");
+            }
+
+            UpdateTripSeats(reservation.Trip);
+        }
+
+        public void IncreaseTripSeatsByReservation(Reservation reservation)
+        {
+            if (reservation.TravelClass == TravelClass.Business && reservation.Trip.FreeBusinessPlaces >= reservation.Seats) {
+                reservation.Trip.FreeBusinessPlaces += reservation.Seats;
+            } else if (reservation.TravelClass == TravelClass.Economy && reservation.Trip.FreeEconomyPlaces >= reservation.Seats) {
+                reservation.Trip.FreeEconomyPlaces += reservation.Seats;
+            } else {
+                throw new NotEnoughSeatsException("Not enough seats left for your reservation");
+            }
+
+            UpdateTripSeats(reservation.Trip);
         }
     }
 }

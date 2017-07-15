@@ -6,10 +6,11 @@ namespace AndrasTimarTGV.Models.Services
     public interface IReservationService
     {
         IEnumerable<Reservation> Reservations { get; }
-        bool SaveReservation(Reservation reservation);
+        void SaveReservation(Reservation reservation);
 
         IEnumerable<Reservation> GetReservationsByUser(AppUser user);
         Reservation GetReservationsById(int reservationId);
         void Delete(AppUser user, int reservationId);
+        void ValidateReservationDate(Reservation model);
     }
 }

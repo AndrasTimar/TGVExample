@@ -13,5 +13,7 @@ namespace AndrasTimarTGV.Models.Services
 
         Trip GetTripById(int tripId);
         void UpdateTripSeats(Trip trip);
+        void DecreaseTripSeatsByReservation(Reservation reservation);
+        void IncreaseTripSeatsByReservation(Reservation reservation);
     }
 }

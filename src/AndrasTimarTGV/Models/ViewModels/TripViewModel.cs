@@ -8,7 +8,6 @@ namespace AndrasTimarTGV.Models.ViewModels
 {
     public class TripViewModel
     {
-        // TODO: validation on this ViewModel
         [Required]
         public int FromCityId { get; set; }
 

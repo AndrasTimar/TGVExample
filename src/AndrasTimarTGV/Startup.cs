@@ -55,6 +55,7 @@ namespace AndrasTimarTGV
             services.AddTransient<IReservationService, ReservationService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IEmailService, EmailService>();
             services.AddMvc();
             services.AddSession();
         }

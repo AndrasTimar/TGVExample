@@ -8,10 +8,12 @@ namespace AndrasTimarTGV.Models.Repositories
     public class EfReservationRepository : IReservationRepository
     {
         private readonly ApplicationDbContext Context;
+        private readonly ITripRepository TripRepository;
 
-        public EfReservationRepository(ApplicationDbContext ctx)
+        public EfReservationRepository(ApplicationDbContext ctx, ITripRepository tripRepository)
         {
             Context = ctx;
+            TripRepository = tripRepository;
         }
 
         public IEnumerable<Reservation> Reservations => Context.Reservations;
@@ -20,6 +22,7 @@ namespace AndrasTimarTGV.Models.Repositories
         {
             Context.Reservations.Add(reservation);
             Context.SaveChanges();
+            TripRepository.UpdateTripSeats(reservation.Trip);
         }
 
         public IEnumerable<Reservation> GetReservationByUserId(string userId)
@@ -42,7 +45,7 @@ namespace AndrasTimarTGV.Models.Repositories
         }
 
         public void Delete(Reservation reservation)
-        {
+        {                       
             Reservation entry = Context.Reservations.FirstOrDefault(x => x.ReservationId == reservation.ReservationId);
             Context.Remove(entry);
             Context.SaveChanges();
