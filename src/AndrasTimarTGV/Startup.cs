@@ -65,6 +65,8 @@ namespace AndrasTimarTGV
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            } else {
+                app.UseExceptionHandler("/Error/Index");
             }
             app.UseStaticFiles();
             app.UseSession();
