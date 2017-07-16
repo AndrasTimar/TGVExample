@@ -13,12 +13,13 @@ namespace AndrasTimarTGV.Controller
         {
             TripService = tripService;
         }
+
         [HttpPost]
-        public IActionResult List(TripViewModel tripVM)
+        public IActionResult List(TripViewModel tripVm)
         {
             if (ModelState.IsValid)
             {
-                var resulTrips = TripService.GetTripsByCitIdsAndDate(tripVM.FromCityId, tripVM.ToCityId, tripVM.Time);
+                var resulTrips = TripService.GetTripsByCitIdsAndDate(tripVm.FromCityId, tripVm.ToCityId, tripVm.Time);
                 return View(resulTrips.OrderBy(x => x.Time.Hour));
             }
             return RedirectToAction("Index", "Home");

@@ -34,11 +34,18 @@ namespace AndrasTimarTGV.Models.Services
 
         public void DecreaseTripSeatsByReservation(Reservation reservation)
         {
-            if (reservation.TravelClass == TravelClass.Business && reservation.Trip.FreeBusinessPlaces >= reservation.Seats) {
+            if (reservation.TravelClass == TravelClass.Business &&
+                reservation.Trip.FreeBusinessPlaces >= reservation.Seats)
+            {
                 reservation.Trip.FreeBusinessPlaces -= reservation.Seats;
-            } else if (reservation.TravelClass == TravelClass.Economy && reservation.Trip.FreeEconomyPlaces >= reservation.Seats) {
+            }
+            else if (reservation.TravelClass == TravelClass.Economy &&
+                     reservation.Trip.FreeEconomyPlaces >= reservation.Seats)
+            {
                 reservation.Trip.FreeEconomyPlaces -= reservation.Seats;
-            } else {
+            }
+            else
+            {
                 throw new NotEnoughSeatsException("Not enough seats left for your reservation");
             }
 
@@ -47,11 +54,18 @@ namespace AndrasTimarTGV.Models.Services
 
         public void IncreaseTripSeatsByReservation(Reservation reservation)
         {
-            if (reservation.TravelClass == TravelClass.Business && reservation.Trip.FreeBusinessPlaces >= reservation.Seats) {
+            if (reservation.TravelClass == TravelClass.Business &&
+                reservation.Trip.FreeBusinessPlaces >= reservation.Seats)
+            {
                 reservation.Trip.FreeBusinessPlaces += reservation.Seats;
-            } else if (reservation.TravelClass == TravelClass.Economy && reservation.Trip.FreeEconomyPlaces >= reservation.Seats) {
+            }
+            else if (reservation.TravelClass == TravelClass.Economy &&
+                     reservation.Trip.FreeEconomyPlaces >= reservation.Seats)
+            {
                 reservation.Trip.FreeEconomyPlaces += reservation.Seats;
-            } else {
+            }
+            else
+            {
                 throw new NotEnoughSeatsException("Not enough seats left for your reservation");
             }
 
