@@ -19,7 +19,7 @@ namespace AndrasTimarTGV.Components
 
         public IViewComponentResult Invoke()
         {
-            AppUser user = UserManager.FindByNameAsync(HttpContext.User.Identity.Name??"").Result;
+            AppUser user = UserManager.FindByNameAsync(HttpContext.User.Identity.Name ?? "").Result;
             if (user != null)
             {
                 return View(BannerTextService.GetBannerTextForLang(user.DefaultLanguage));

@@ -64,7 +64,7 @@ namespace AndrasTimarTGV.Controllers
         [HttpPost]
         [ModelStateValidityActionFilter]
         public IActionResult Checkout(Reservation model)
-        {          
+        {
             try
             {
                 model.User = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
@@ -76,7 +76,7 @@ namespace AndrasTimarTGV.Controllers
             {
                 ModelState.AddModelError("", ex.Message);
                 return View("Reserve", model);
-            }                 
+            }
         }
 
         public ViewResult List()

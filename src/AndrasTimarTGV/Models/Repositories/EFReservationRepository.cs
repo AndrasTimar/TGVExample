@@ -45,7 +45,7 @@ namespace AndrasTimarTGV.Models.Repositories
         }
 
         public void Delete(Reservation reservation)
-        {                       
+        {
             Reservation entry = Context.Reservations.FirstOrDefault(x => x.ReservationId == reservation.ReservationId);
             Context.Remove(entry);
             Context.SaveChanges();

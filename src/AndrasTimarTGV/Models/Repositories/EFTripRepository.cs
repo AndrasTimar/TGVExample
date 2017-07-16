@@ -16,20 +16,21 @@ namespace AndrasTimarTGV.Models.Repositories
         }
 
         public IEnumerable<Trip> Trips => Context.Trips
-            .Include(x=>x.FromCity)
-            .Include(x=>x.ToCity);
+            .Include(x => x.FromCity)
+            .Include(x => x.ToCity);
 
         public IEnumerable<Trip> GetTripsByDateAndCities(int fromCityId, int toCityId, DateTime time)
         {
             return Context.Trips.Include(x => x.FromCity).Include(x => x.ToCity).Where(
                 x => x.ToCity.CityId == toCityId
-                && x.FromCity.CityId == fromCityId 
-                && x.Time.Date == time.Date);
+                     && x.FromCity.CityId == fromCityId
+                     && x.Time.Date == time.Date);
         }
 
         public Trip GetTipById(int tripId)
         {
-            return Context.Trips.Include(x=>x.FromCity).Include(x=>x.ToCity).FirstOrDefault(x => x.TripId == tripId);
+            return Context.Trips.Include(x => x.FromCity).Include(x => x.ToCity)
+                .FirstOrDefault(x => x.TripId == tripId);
         }
 
         public void UpdateTripSeats(Trip trip)
@@ -40,8 +41,7 @@ namespace AndrasTimarTGV.Models.Repositories
                 entry.FreeBusinessPlaces = trip.FreeBusinessPlaces;
                 entry.FreeEconomyPlaces = trip.FreeEconomyPlaces;
                 Context.SaveChanges();
-            }         
-            
+            }
         }
     }
 }

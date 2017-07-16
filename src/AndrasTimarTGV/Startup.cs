@@ -26,16 +26,19 @@ namespace AndrasTimarTGV
         public Startup(IHostingEnvironment env)
         {
             Configuration = new ConfigurationBuilder()
-               .SetBasePath(env.ContentRootPath)
-               .AddJsonFile("appsettings.json")
-               .Build();
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+                .Build();
         }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
-                Configuration["Data:TGVMain:ConnectionString"]));            
+                Configuration["Data:TGVMain:ConnectionString"]));
 
-            services.AddIdentity<AppUser, IdentityRole>(options => {
+            services.AddIdentity<AppUser, IdentityRole>(options =>
+                {
                     options.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
                     options.Password.RequiredLength = 6;
                     options.Password.RequireDigit = false;
@@ -45,7 +48,7 @@ namespace AndrasTimarTGV
                     options.User.RequireUniqueEmail = true;
                 }
             ).AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddTransient<IBannerTextRepository, EFBannerTextRepository>();
+            services.AddTransient<IBannerTextRepository, EfBannerTextRepository>();
             services.AddTransient<IBannerTextService, BannerTextService>();
             services.AddTransient<ITripRepository, EfTripRepository>();
             services.AddTransient<ITripService, TripService>();
@@ -65,7 +68,9 @@ namespace AndrasTimarTGV
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            } else {
+            }
+            else
+            {
                 app.UseExceptionHandler("/Error/Index");
             }
             app.UseStaticFiles();
@@ -73,7 +78,6 @@ namespace AndrasTimarTGV
             app.UseIdentity();
             app.UseMvc(routes =>
             {
-                
                 routes.MapRoute(
                     name: null,
                     template: "{controller}/{action}",
@@ -85,7 +89,7 @@ namespace AndrasTimarTGV
                     defaults: new {controller = "Home", action = "Index"});
                 routes.MapRoute(name: null, template: "{controller}/{action}/{id?}");
             });
-           // SeedData.AddSeedData(app);
+            // SeedData.AddSeedData(app);
         }
     }
 }
