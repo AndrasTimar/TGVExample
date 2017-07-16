@@ -44,9 +44,10 @@ namespace AndrasTimarTGV.Controllers
         }
 
         [HttpPost]
+        [ModelStateValidityActionFilter]
         public ActionResult Proceed(Reservation model)
         {
-            model.User = UserService.FindAppUserByName(HttpContext.User.Identity.Name);
+            model.User = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
             model.Trip = TripService.GetTripById(model.Trip.TripId);
             try
             {
@@ -56,16 +57,17 @@ namespace AndrasTimarTGV.Controllers
             {
                 ModelState.AddModelError("", ex.Message);
             }
-           
+
             return ModelState.IsValid ? View(model) : View("Reserve", model);
         }
 
         [HttpPost]
+        [ModelStateValidityActionFilter]
         public IActionResult Checkout(Reservation model)
-        {
+        {          
             try
             {
-                model.User = UserService.FindAppUserByName(HttpContext.User.Identity.Name);
+                model.User = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
                 model.Trip = TripService.GetTripById(model.Trip.TripId);
                 ReservationService.SaveReservation(model);
                 return View(model);
@@ -74,23 +76,19 @@ namespace AndrasTimarTGV.Controllers
             {
                 ModelState.AddModelError("", ex.Message);
                 return View("Reserve", model);
-            }
-            catch (NullReferenceException ex)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            }                 
         }
 
         public ViewResult List()
         {
-            var user = UserService.FindAppUserByName(HttpContext.User.Identity.Name);
+            var user = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
             return View(ReservationService.GetReservationsByUser(user));
         }
 
         [HttpPost]
         public IActionResult Delete(int reservationId)
         {
-            var user = UserService.FindAppUserByName(HttpContext?.User?.Identity?.Name);
+            var user = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
 
             try
             {
@@ -101,7 +99,7 @@ namespace AndrasTimarTGV.Controllers
                 TempData["ERROR"] = ex.Message;
             }
             catch (InvalidOperationException)
-            {            
+            {
                 TempData["ERROR"] = "Invalid trip";
             }
 

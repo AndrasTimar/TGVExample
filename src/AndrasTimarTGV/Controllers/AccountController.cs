@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AndrasTimarTGV.Models;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.ViewModels;
+using AndrasTimarTGV.Util.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -42,23 +43,23 @@ namespace AndrasTimarTGV.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginUserViewModel details, string returnUrl)
         {
-            if (ModelState.IsValid)
+           
+            AppUser user = await UserManager.FindByEmailAsync(details.Email);
+            if (user != null)
             {
-                AppUser user = await UserManager.FindByEmailAsync(details.Email);
-                if (user != null)
+                await SignInManager.SignOutAsync();
+                var result = await SignInManager.PasswordSignInAsync(user, details.Password, false, false);
+                if (result.Succeeded)
                 {
-                    await SignInManager.SignOutAsync();
-                    var result = await SignInManager.PasswordSignInAsync(user, details.Password, false, false);
-                    if (result.Succeeded)
-                    {
-                        return Redirect(returnUrl ?? "/");
-                    }
+                    return Redirect(returnUrl ?? "/");
                 }
+                
                 ModelState.AddModelError(nameof(LoginUserViewModel.Email), "Invalid user or password");
-            }
+            }            
             return View(details);
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public async Task<ViewResult> Register()
         {
@@ -76,39 +77,34 @@ namespace AndrasTimarTGV.Controllers
         }
 
 
+        [ModelStateValidityActionFilter]
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register(CreateUserViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-
-                if (model.Password == model.PasswordConfirm)
-                {                    
-                    var user = new AppUser
-                    {
-                        UserName = model.UserName,
-                        Email = model.Email,
-                        DefaultLanguage = (Language) Enum.Parse(typeof(Language), model.DefaultLanguage),
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                    };
-                    IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-                    if (result.Succeeded)
-                    {
-                        TempData["Message"] = "Registration Successful";
-                        return RedirectToAction("Index", "Home");
-                    }
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
-                else
+            if (model.Password == model.PasswordConfirm)
+            {                    
+                var user = new AppUser
                 {
-                    ModelState.AddModelError("", "Passwords don't match");
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    DefaultLanguage = (Language) Enum.Parse(typeof(Language), model.DefaultLanguage),
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                };
+                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    TempData["Message"] = "Registration Successful";
+                    return RedirectToAction("Index", "Home");
                 }
+                AddErrorsFromResult(result);
             }
+            else
+            {
+                ModelState.AddModelError("", "Passwords don't match");
+            }
+            
             return View(model);
         }
 
@@ -132,38 +128,32 @@ namespace AndrasTimarTGV.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [ModelStateValidityActionFilter]
         [HttpPost]
         public async Task<IActionResult> Edit(CreateUserViewModel model)
         {
-            if (ModelState.IsValid)
+            if (model.Password == model.PasswordConfirm)
             {
-                if (model.Password == model.PasswordConfirm)
-                {
-                    AppUser user = await UserManager.FindByNameAsync(HttpContext.User.Identity.Name);
-                    user.UserName = model.UserName;
-                    user.Email = model.Email;
-                    user.DefaultLanguage = (Language) Enum.Parse(typeof(Language), model.DefaultLanguage);
-                    user.FirstName = model.FirstName;
-                    user.LastName = model.LastName;
-                    user.PasswordHash = PasswordHasher.HashPassword(user, model.Password);
+                AppUser user = await UserManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                user.UserName = model.UserName;
+                user.Email = model.Email;
+                user.DefaultLanguage = (Language) Enum.Parse(typeof(Language), model.DefaultLanguage);
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.PasswordHash = PasswordHasher.HashPassword(user, model.Password);
 
-                    var result = await UserManager.UpdateAsync(user);
-                    if (result.Succeeded)
-                    {
-                        TempData["Message"] = "Changes saved";
-                        //TODO: read tempdata in view
-                        return RedirectToAction("Index", "Home");
-                    }
-                    foreach (IdentityError error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
-                else
+                var result = await UserManager.UpdateAsync(user);
+                if (result.Succeeded)
                 {
-                    ModelState.AddModelError("", "Passwords don't match");
+                    TempData["Message"] = "Changes saved";
+                    return RedirectToAction("Index", "Home");
                 }
+                AddErrorsFromResult(result);
             }
+            else
+            {
+                ModelState.AddModelError("", "Passwords don't match");
+            }            
             return RedirectToAction("Index", "Home");
         }
 

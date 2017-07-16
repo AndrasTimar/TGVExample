@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using AndrasTimarTGV.Models.Services;
 using AndrasTimarTGV.Models.ViewModels;
+using AndrasTimarTGV.Util.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AndrasTimarTGV.Controller
@@ -15,14 +16,11 @@ namespace AndrasTimarTGV.Controller
         }
 
         [HttpPost]
+        [ModelStateValidityActionFilter]
         public IActionResult List(TripViewModel tripVm)
-        {
-            if (ModelState.IsValid)
-            {
-                var resulTrips = TripService.GetTripsByCitIdsAndDate(tripVm.FromCityId, tripVm.ToCityId, tripVm.Time);
-                return View(resulTrips.OrderBy(x => x.Time.Hour));
-            }
-            return RedirectToAction("Index", "Home");
+        {       
+            var resulTrips = TripService.GetTripsByCitIdsAndDate(tripVm.FromCityId, tripVm.ToCityId, tripVm.Time);
+            return View(resulTrips.OrderBy(x => x.Time.Hour));            
         }
     }
 }

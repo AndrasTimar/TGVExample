@@ -53,8 +53,6 @@ namespace AndrasTimarTGV
             services.AddTransient<ICityService, CityService>();
             services.AddTransient<IReservationRepository, EfReservationRepository>();
             services.AddTransient<IReservationService, ReservationService>();
-            services.AddTransient<IAccountService, AccountService>();
-            services.AddTransient<IAccountRepository, AccountRepository>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddMvc();
             services.AddSession();
@@ -85,7 +83,7 @@ namespace AndrasTimarTGV
                     defaults: new {controller = "Home", action = "Index"});
                 routes.MapRoute(name: null, template: "{controller}/{action}/{id?}");
             });
-            SeedData.AddSeedData(app);
+           // SeedData.AddSeedData(app);
         }
     }
 }
