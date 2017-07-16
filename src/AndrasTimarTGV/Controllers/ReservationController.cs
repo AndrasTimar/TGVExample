@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Services;
 using AndrasTimarTGV.Util;
+using AndrasTimarTGV.Util.Filters;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AndrasTimarTGV.Controllers
@@ -13,19 +16,19 @@ namespace AndrasTimarTGV.Controllers
     {
         private readonly IReservationService ReservationService;
         private readonly ITripService TripService;
-        private readonly IUserService UserService;
+        private readonly UserManager<AppUser> UserManager;
 
         public ReservationController(IReservationService reservationService, ITripService tripService,
-            IUserService userService)
+            UserManager<AppUser> userManager)
         {
-            UserService = userService;
             ReservationService = reservationService;
             TripService = tripService;
+            UserManager = userManager;
         }
 
         public IActionResult Reserve(int tripId)
         {
-            AppUser user = UserService.FindAppUserByName(HttpContext.User.Identity.Name);
+            AppUser user = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
             var trip = TripService.GetTripById(tripId);
             if (trip == null)
             {

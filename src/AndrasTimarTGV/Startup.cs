@@ -53,8 +53,8 @@ namespace AndrasTimarTGV
             services.AddTransient<ICityService, CityService>();
             services.AddTransient<IReservationRepository, EfReservationRepository>();
             services.AddTransient<IReservationService, ReservationService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddMvc();
             services.AddSession();

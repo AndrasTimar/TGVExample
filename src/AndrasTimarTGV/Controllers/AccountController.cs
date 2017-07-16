@@ -112,6 +112,7 @@ namespace AndrasTimarTGV.Controllers
             return View(model);
         }
 
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Edit()
         {
