@@ -63,6 +63,4 @@ namespace AndrasTimarTGV.Models.ViewModels
         [UIHint("password")]
         public string Password { get; set; }
     }
-
-
 }

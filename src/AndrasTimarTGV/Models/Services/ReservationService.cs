@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Mail;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
 using AndrasTimarTGV.Util;
-using Microsoft.Extensions.Logging;
-using SendGrid;
 
 namespace AndrasTimarTGV.Models.Services
 {
@@ -25,9 +21,9 @@ namespace AndrasTimarTGV.Models.Services
         }
 
         public IEnumerable<Reservation> Reservations => ReservationRepository.Reservations;
-        
+
         public void SaveReservation(Reservation reservation)
-        {           
+        {
             ValidateReservationDate(reservation);
             TripService.DecreaseTripSeatsByReservation(reservation);
             ReservationRepository.SaveReservation(reservation);
@@ -74,10 +70,12 @@ namespace AndrasTimarTGV.Models.Services
 
         public void ValidateReservationDate(Reservation reservation)
         {
-            if (DateTime.Compare(reservation.Trip.Time, DateTime.Now) <= 0) {
+            if (DateTime.Compare(reservation.Trip.Time, DateTime.Now) <= 0)
+            {
                 throw new ReservationOutOfTimeframeException("Reservations can not be made for the past!");
             }
-            if (DateTime.Compare(reservation.Trip.Time, DateTime.Now.AddDays(14)) >= 0) {
+            if (DateTime.Compare(reservation.Trip.Time, DateTime.Now.AddDays(14)) >= 0)
+            {
                 throw new ReservationOutOfTimeframeException(
                     "Reservations can be made at most 14 days before departure!");
             }

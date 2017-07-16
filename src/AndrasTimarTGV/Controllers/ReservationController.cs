@@ -26,9 +26,9 @@ namespace AndrasTimarTGV.Controllers
             UserManager = userManager;
         }
 
-        public IActionResult Reserve(int tripId)
+        public async Task<IActionResult> Reserve(int tripId)
         {
-            AppUser user = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
+            AppUser user = await UserManager.FindByNameAsync(HttpContext.User.Identity.Name);
             var trip = TripService.GetTripById(tripId);
             if (trip == null)
             {
@@ -45,9 +45,9 @@ namespace AndrasTimarTGV.Controllers
 
         [HttpPost]
         [ModelStateValidityActionFilter]
-        public ActionResult Proceed(Reservation model)
+        public async Task<ActionResult> Proceed(Reservation model)
         {
-            model.User = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
+            model.User = await UserManager.FindByNameAsync(HttpContext.User.Identity.Name);
             model.Trip = TripService.GetTripById(model.Trip.TripId);
             try
             {
@@ -63,11 +63,11 @@ namespace AndrasTimarTGV.Controllers
 
         [HttpPost]
         [ModelStateValidityActionFilter]
-        public IActionResult Checkout(Reservation model)
-        {          
+        public async Task<IActionResult> Checkout(Reservation model)
+        {
             try
             {
-                model.User = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
+                model.User = await UserManager.FindByNameAsync(HttpContext.User.Identity.Name);
                 model.Trip = TripService.GetTripById(model.Trip.TripId);
                 ReservationService.SaveReservation(model);
                 return View(model);
@@ -76,7 +76,7 @@ namespace AndrasTimarTGV.Controllers
             {
                 ModelState.AddModelError("", ex.Message);
                 return View("Reserve", model);
-            }                 
+            }
         }
 
         public ViewResult List()
@@ -86,9 +86,9 @@ namespace AndrasTimarTGV.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(int reservationId)
+        public async Task<IActionResult> Delete(int reservationId)
         {
-            var user = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
+            var user = await UserManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             try
             {

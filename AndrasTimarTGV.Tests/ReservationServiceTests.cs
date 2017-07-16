@@ -50,21 +50,13 @@ namespace AndrasTimarTGV.Tests
         [Test]
         public void CanNotDeleteInLastThreeDays()
         {
-            TestReservation.Trip.Time = DateTime.Now.AddDays(1);
-            Assert.Throws<ReservationOutOfTimeframeException>(
-                () => ReservationService.Delete(TestUser, TestReservation.ReservationId),
-                "Reservations can not be deleted in the last 3 days!");
-
-            TestReservation.Trip.Time = DateTime.Now.AddDays(2);
-            Assert.Throws<ReservationOutOfTimeframeException>(
-                () => ReservationService.Delete(TestUser, TestReservation.ReservationId),
-                "Reservations can not be deleted in the last 3 days!");
-
-            TestReservation.Trip.Time = DateTime.Now.AddDays(3);
-            Assert.Throws<ReservationOutOfTimeframeException>(
-                () => ReservationService.Delete(TestUser, TestReservation.ReservationId),
-                "Reservations can not be deleted in the last 3 days!");
-
+            for (int i = 1; i < 4; i++)
+            {
+                TestReservation.Trip.Time = DateTime.Now.AddDays(i);
+                Assert.Throws<ReservationOutOfTimeframeException>(
+                    () => ReservationService.Delete(TestUser, TestReservation.ReservationId),
+                    "Reservations can not be deleted in the last 3 days!");
+            }
             TestReservation.Trip.Time = DateTime.Now.AddDays(4);
             Assert.DoesNotThrow(() => ReservationService.Delete(TestUser, TestReservation.ReservationId));
         }

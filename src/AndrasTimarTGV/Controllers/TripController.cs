@@ -4,7 +4,7 @@ using AndrasTimarTGV.Models.ViewModels;
 using AndrasTimarTGV.Util.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AndrasTimarTGV.Controller
+namespace AndrasTimarTGV.Controllers
 {
     public class TripController : Microsoft.AspNetCore.Mvc.Controller
     {
@@ -18,9 +18,9 @@ namespace AndrasTimarTGV.Controller
         [HttpPost]
         [ModelStateValidityActionFilter]
         public IActionResult List(TripViewModel tripVm)
-        {       
+        {
             var resulTrips = TripService.GetTripsByCitIdsAndDate(tripVm.FromCityId, tripVm.ToCityId, tripVm.Time);
-            return View(resulTrips.OrderBy(x => x.Time.Hour));            
+            return View(resulTrips.OrderBy(x => x.Time.Hour));
         }
     }
 }

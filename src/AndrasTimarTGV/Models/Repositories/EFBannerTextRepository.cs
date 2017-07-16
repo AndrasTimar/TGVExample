@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AndrasTimarTGV.Models.Entities;
-using AndrasTimarTGV.Models.Repositories;
 
-namespace AndrasTimarTGV.Models
+namespace AndrasTimarTGV.Models.Repositories
 {
-    public class EFBannerTextRepository : IBannerTextRepository
+    public class EfBannerTextRepository : IBannerTextRepository
     {
         private readonly ApplicationDbContext Context;
 
-        public EFBannerTextRepository(ApplicationDbContext ctx)
+        public EfBannerTextRepository(ApplicationDbContext ctx)
         {
             Context = ctx;
         }

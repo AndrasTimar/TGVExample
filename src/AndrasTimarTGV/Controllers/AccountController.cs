@@ -43,7 +43,6 @@ namespace AndrasTimarTGV.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginUserViewModel details, string returnUrl)
         {
-           
             AppUser user = await UserManager.FindByEmailAsync(details.Email);
             if (user != null)
             {
@@ -53,9 +52,9 @@ namespace AndrasTimarTGV.Controllers
                 {
                     return Redirect(returnUrl ?? "/");
                 }
-                
+
                 ModelState.AddModelError(nameof(LoginUserViewModel.Email), "Invalid user or password");
-            }            
+            }
             return View(details);
         }
 
@@ -83,7 +82,7 @@ namespace AndrasTimarTGV.Controllers
         public async Task<IActionResult> Register(CreateUserViewModel model)
         {
             if (model.Password == model.PasswordConfirm)
-            {                    
+            {
                 var user = new AppUser
                 {
                     UserName = model.UserName,
@@ -104,7 +103,7 @@ namespace AndrasTimarTGV.Controllers
             {
                 ModelState.AddModelError("", "Passwords don't match");
             }
-            
+
             return View(model);
         }
 
@@ -153,7 +152,7 @@ namespace AndrasTimarTGV.Controllers
             else
             {
                 ModelState.AddModelError("", "Passwords don't match");
-            }            
+            }
             return RedirectToAction("Index", "Home");
         }
 
