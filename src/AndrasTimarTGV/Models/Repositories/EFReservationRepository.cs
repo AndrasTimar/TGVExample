@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,11 +45,11 @@ namespace AndrasTimarTGV.Models.Repositories
                 .ThenInclude(x => x.ToCity).FirstOrDefault();
         }
 
-        public void Delete(Reservation reservation)
+        public async Task DeleteAsync(Reservation reservation)
         {
-            Reservation entry = Context.Reservations.FirstOrDefault(x => x.ReservationId == reservation.ReservationId);
+            Reservation entry = await Context.Reservations.FirstOrDefaultAsync(x => x.ReservationId == reservation.ReservationId);
             Context.Remove(entry);
-            Context.SaveChanges();
+            await Context.SaveChangesAsync();
         }
     }
 }

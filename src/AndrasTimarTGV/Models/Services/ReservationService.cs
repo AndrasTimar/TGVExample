@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
 using AndrasTimarTGV.Util;
@@ -40,7 +41,7 @@ namespace AndrasTimarTGV.Models.Services
             return ReservationRepository.GetReservationById(reservationId);
         }
 
-        public void Delete(AppUser user, int reservationId)
+        public async Task Delete(AppUser user, int reservationId)
         {
             Reservation reservation = ReservationRepository.GetReservationById(reservationId);
 
@@ -60,7 +61,7 @@ namespace AndrasTimarTGV.Models.Services
 
                 TripService.IncreaseTripSeatsByReservation(reservation);
 
-                ReservationRepository.Delete(reservation);
+                await ReservationRepository.DeleteAsync(reservation);
             }
             else
             {

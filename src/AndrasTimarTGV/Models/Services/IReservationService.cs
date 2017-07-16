@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 
 namespace AndrasTimarTGV.Models.Services
@@ -10,7 +11,7 @@ namespace AndrasTimarTGV.Models.Services
 
         IEnumerable<Reservation> GetReservationsByUser(AppUser user);
         Reservation GetReservationsById(int reservationId);
-        void Delete(AppUser user, int reservationId);
+        Task Delete(AppUser user, int reservationId);
         void ValidateReservationDate(Reservation model);
     }
 }

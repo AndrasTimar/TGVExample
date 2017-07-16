@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 
 namespace AndrasTimarTGV.Models.Repositories
@@ -9,6 +10,6 @@ namespace AndrasTimarTGV.Models.Repositories
         void SaveReservation(Reservation reservation);
         IEnumerable<Reservation> GetReservationByUserId(string userId);
         Reservation GetReservationById(int reservationId);
-        void Delete(Reservation reservation);
+        Task DeleteAsync(Reservation reservation);
     }
 }

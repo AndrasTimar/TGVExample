@@ -86,13 +86,13 @@ namespace AndrasTimarTGV.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(int reservationId)
+        public async Task<IActionResult> Delete(int reservationId)
         {
-            var user = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
+            var user = await UserManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
             try
             {
-                ReservationService.Delete(user, reservationId);
+               await ReservationService.Delete(user, reservationId);
             }
             catch (ReservationOutOfTimeframeException ex)
             {

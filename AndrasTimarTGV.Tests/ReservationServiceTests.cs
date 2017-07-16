@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
 using AndrasTimarTGV.Models.Services;
@@ -51,22 +52,19 @@ namespace AndrasTimarTGV.Tests
         public void CanNotDeleteInLastThreeDays()
         {
             TestReservation.Trip.Time = DateTime.Now.AddDays(1);
-            Assert.Throws<ReservationOutOfTimeframeException>(
-                () => ReservationService.Delete(TestUser, TestReservation.ReservationId),
+            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(async () => await ReservationService.Delete(TestUser, TestReservation.ReservationId),
                 "Reservations can not be deleted in the last 3 days!");
 
             TestReservation.Trip.Time = DateTime.Now.AddDays(2);
-            Assert.Throws<ReservationOutOfTimeframeException>(
-                () => ReservationService.Delete(TestUser, TestReservation.ReservationId),
+            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(async () => await ReservationService.Delete(TestUser, TestReservation.ReservationId),
                 "Reservations can not be deleted in the last 3 days!");
 
             TestReservation.Trip.Time = DateTime.Now.AddDays(3);
-            Assert.Throws<ReservationOutOfTimeframeException>(
-                () => ReservationService.Delete(TestUser, TestReservation.ReservationId),
+            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(async () => await ReservationService.Delete(TestUser, TestReservation.ReservationId),
                 "Reservations can not be deleted in the last 3 days!");
 
             TestReservation.Trip.Time = DateTime.Now.AddDays(4);
-            Assert.DoesNotThrow(() => ReservationService.Delete(TestUser, TestReservation.ReservationId));
+            Assert.DoesNotThrowAsync(() => ReservationService.Delete(TestUser, TestReservation.ReservationId));
         }
 
         [Test]
@@ -85,35 +83,35 @@ namespace AndrasTimarTGV.Tests
             ReservationRepoMock.Setup(x => x.GetReservationById(userTwoReservation.ReservationId))
                 .Returns(userTwoReservation);
 
-            Assert.Throws<InvalidOperationException>(
+            Assert.ThrowsAsync<InvalidOperationException>(
                 () => ReservationService.Delete(userTwo, TestReservation.ReservationId));
-            Assert.Throws<InvalidOperationException>(
+            Assert.ThrowsAsync<InvalidOperationException>(
                 () => ReservationService.Delete(TestUser, userTwoReservation.ReservationId));
-            Assert.DoesNotThrow(() => ReservationService.Delete(TestUser, TestReservation.ReservationId),
+            Assert.DoesNotThrowAsync(() => ReservationService.Delete(TestUser, TestReservation.ReservationId),
                 "Trip does not belong to logged in user");
-            Assert.DoesNotThrow(() => ReservationService.Delete(userTwo, userTwoReservation.ReservationId),
+            Assert.DoesNotThrowAsync(() => ReservationService.Delete(userTwo, userTwoReservation.ReservationId),
                 "Trip does not belong to logged in user");
         }
 
         [Test]
-        public void DeletionUpdatesTripSeats()
+        public async Task DeletionUpdatesTripSeats()
         {
-            ReservationService.Delete(TestUser, TestReservation.ReservationId);
+            await ReservationService.Delete(TestUser, TestReservation.ReservationId);
 
             TripServiceMock.Verify(x=>x.IncreaseTripSeatsByReservation(TestReservation),Times.Once);       
         }
 
         [Test]
-        public void DeletionIsPropagatedToRepo()
+        public async Task DeletionIsPropagatedToRepo()
         {
-            ReservationService.Delete(TestUser, TestReservation.ReservationId);
-            ReservationRepoMock.Verify(x => x.Delete(TestReservation), Times.Once);
+            await ReservationService.Delete(TestUser, TestReservation.ReservationId);
+            ReservationRepoMock.Verify(x => x.DeleteAsync(TestReservation), Times.Once);
         }
 
         [Test]
         public void CanNotDeleteNonexistentTrip()
         {
-            Assert.Throws<InvalidOperationException>(() => ReservationService.Delete(TestUser, 9999),
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await ReservationService.Delete(TestUser, 9999),
                 "Trip does not exist");
         }
 
