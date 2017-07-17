@@ -26,10 +26,10 @@ namespace AndrasTimarTGV.Controllers
             UserManager = userManager;
         }
 
-        public IActionResult Reserve(int tripId)
+        public async Task<IActionResult> Reserve(int tripId)
         {
             AppUser user = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
-            var trip = TripService.GetTripById(tripId);
+            var trip = await TripService.GetTripByIdAsync(tripId);
             if (trip == null)
             {
                 return RedirectToAction("Index", "Home");
@@ -45,10 +45,14 @@ namespace AndrasTimarTGV.Controllers
 
         [HttpPost]
         [ModelStateValidityActionFilter]
-        public ActionResult Proceed(Reservation model)
+        public async Task<ActionResult> Proceed(Reservation model)
         {
-            model.User = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
-            model.Trip = TripService.GetTripById(model.Trip.TripId);
+            var userTask = UserManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            var tripTask = TripService.GetTripByIdAsync(model.Trip.TripId);
+            await Task.WhenAll(userTask, tripTask);
+            model.User = await userTask;
+            model.Trip = await tripTask;
+
             try
             {
                 ReservationService.ValidateReservationDate(model);
@@ -63,13 +67,18 @@ namespace AndrasTimarTGV.Controllers
 
         [HttpPost]
         [ModelStateValidityActionFilter]
-        public IActionResult Checkout(Reservation model)
+        public async Task<IActionResult> Checkout(Reservation model)
         {
             try
             {
-                model.User = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
-                model.Trip = TripService.GetTripById(model.Trip.TripId);
-                ReservationService.SaveReservation(model);
+                var userTask = UserManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                var tripTask = TripService.GetTripByIdAsync(model.Trip.TripId);
+                await Task.WhenAll(userTask, tripTask);
+                model.User = await userTask;
+                model.Trip = await tripTask;
+
+                await ReservationService.SaveReservationAsync(model);
+
                 return View(model);
             }
             catch (ReservationException ex)
@@ -79,10 +88,11 @@ namespace AndrasTimarTGV.Controllers
             }
         }
 
-        public ViewResult List()
+        public async Task<ViewResult> List()
         {
-            var user = UserManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
-            return View(ReservationService.GetReservationsByUser(user));
+            var user = await UserManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            var reservations = await ReservationService.GetReservationsByUserAsync(user);
+            return View(reservations);
         }
 
         [HttpPost]
@@ -92,7 +102,7 @@ namespace AndrasTimarTGV.Controllers
 
             try
             {
-               await ReservationService.Delete(user, reservationId);
+               await ReservationService.DeleteAsync(user, reservationId);
             }
             catch (ReservationOutOfTimeframeException ex)
             {

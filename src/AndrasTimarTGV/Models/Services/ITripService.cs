@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 
 namespace AndrasTimarTGV.Models.Services
 {
     public interface ITripService
     {
-        IEnumerable<Trip> Trips { get; }
-
-        IEnumerable<Trip> GetTripsByCitIdsAndDate(int tripSearchFromCityId, int tripSearchToCityId,
+        Task<IEnumerable<Trip>> GetTripsByCitIdsAndDateAsync(int tripSearchFromCityId, int tripSearchToCityId,
             DateTime tripSearchTime);
 
-        Trip GetTripById(int tripId);
-        void UpdateTripSeats(Trip trip);
-        void DecreaseTripSeatsByReservation(Reservation reservation);
-        void IncreaseTripSeatsByReservation(Reservation reservation);
+        Task<Trip> GetTripByIdAsync(int tripId);
+        Task UpdateTripSeatsAsync(Trip trip);
+        Task DecreaseTripSeatsByReservationAsync(Reservation reservation);
+        Task IncreaseTripSeatsByReservationAsync(Reservation reservation);
     }
 }

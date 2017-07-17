@@ -6,10 +6,9 @@ namespace AndrasTimarTGV.Models.Repositories
 {
     public interface IReservationRepository
     {
-        IEnumerable<Reservation> Reservations { get; }
-        void SaveReservation(Reservation reservation);
-        IEnumerable<Reservation> GetReservationByUserId(string userId);
-        Reservation GetReservationById(int reservationId);
-        Task DeleteAsync(Reservation reservation);
+        Task SaveReservationAsync(Reservation reservation);
+        Task<IEnumerable<Reservation>> GetReservationByUserIdAsync(string userId);
+        Task<Reservation> GetReservationByIdAsync(int reservationId);
+        Task DeleteReservationAsync(Reservation reservation);
     }
 }

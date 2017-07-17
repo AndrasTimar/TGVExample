@@ -37,36 +37,36 @@ namespace AndrasTimarTGV.Tests
         public void DecreaseSeatTest()
         {
             TestReservation.TravelClass = TravelClass.Business;                    
-            TripService.DecreaseTripSeatsByReservation(TestReservation);
+            TripService.DecreaseTripSeatsByReservationAsync(TestReservation);
             Assert.AreEqual(FreePlaces - Seats, TestReservation.Trip.FreeBusinessPlaces);
 
-            TripRepositoryMock.Verify(x => x.UpdateTripSeats(TestReservation.Trip), Times.Once);
+            TripRepositoryMock.Verify(x => x.UpdateTripSeatsAsync(TestReservation.Trip), Times.Once);
 
             TripRepositoryMock.ResetCalls();
 
             TestReservation.TravelClass = TravelClass.Economy;
-            TripService.DecreaseTripSeatsByReservation(TestReservation);
+            TripService.DecreaseTripSeatsByReservationAsync(TestReservation);
             Assert.AreEqual(FreePlaces - Seats, TestReservation.Trip.FreeEconomyPlaces);
 
-            TripRepositoryMock.Verify(x => x.UpdateTripSeats(TestReservation.Trip), Times.Once);
+            TripRepositoryMock.Verify(x => x.UpdateTripSeatsAsync(TestReservation.Trip), Times.Once);
         }
 
         [Test]
         public void IncreaseSeatTest()
         {            
             TestReservation.TravelClass = TravelClass.Business;
-            TripService.IncreaseTripSeatsByReservation(TestReservation);
+            TripService.IncreaseTripSeatsByReservationAsync(TestReservation);
             Assert.AreEqual(FreePlaces + Seats, TestReservation.Trip.FreeBusinessPlaces);
 
-            TripRepositoryMock.Verify(x => x.UpdateTripSeats(TestReservation.Trip), Times.Once);
+            TripRepositoryMock.Verify(x => x.UpdateTripSeatsAsync(TestReservation.Trip), Times.Once);
 
             TripRepositoryMock.ResetCalls();
 
             TestReservation.TravelClass = TravelClass.Economy;
-            TripService.IncreaseTripSeatsByReservation(TestReservation);
+            TripService.IncreaseTripSeatsByReservationAsync(TestReservation);
             Assert.AreEqual(FreePlaces + Seats, TestReservation.Trip.FreeEconomyPlaces);
 
-            TripRepositoryMock.Verify(x => x.UpdateTripSeats(TestReservation.Trip), Times.Once);
+            TripRepositoryMock.Verify(x => x.UpdateTripSeatsAsync(TestReservation.Trip), Times.Once);
         }       
     }
 }

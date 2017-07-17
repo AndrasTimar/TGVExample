@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Services;
 using AndrasTimarTGV.Models.ViewModels;
 using AndrasTimarTGV.Util.Filters;
@@ -17,9 +18,9 @@ namespace AndrasTimarTGV.Controllers
 
         [HttpPost]
         [ModelStateValidityActionFilter]
-        public IActionResult List(TripViewModel tripVm)
+        public async Task<IActionResult> List(TripViewModel tripVm)
         {
-            var resulTrips = TripService.GetTripsByCitIdsAndDate(tripVm.FromCityId, tripVm.ToCityId, tripVm.Time);
+            var resulTrips = await TripService.GetTripsByCitIdsAndDateAsync(tripVm.FromCityId, tripVm.ToCityId, tripVm.Time);
             return View(resulTrips.OrderBy(x => x.Time.Hour));
         }
     }

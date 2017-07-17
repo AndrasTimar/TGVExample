@@ -16,36 +16,35 @@ namespace AndrasTimarTGV.Models.Repositories
             Context = ctx;
             TripRepository = tripRepository;
         }
+        
 
-        public IEnumerable<Reservation> Reservations => Context.Reservations;
-
-        public void SaveReservation(Reservation reservation)
+        public async Task SaveReservationAsync(Reservation reservation)
         {
-            Context.Reservations.Add(reservation);
-            Context.SaveChanges();
-            TripRepository.UpdateTripSeats(reservation.Trip);
+            await Context.Reservations.AddAsync(reservation);
+            await Context.SaveChangesAsync();
+            await TripRepository.UpdateTripSeatsAsync(reservation.Trip);
         }
 
-        public IEnumerable<Reservation> GetReservationByUserId(string userId)
+        public async Task<IEnumerable<Reservation>> GetReservationByUserIdAsync(string userId)
         {
-            return Context.Reservations.Where(x => x.User.Id == userId)
+            return await Context.Reservations.Where(x => x.User.Id == userId)
                 .Include(x => x.Trip)
                 .ThenInclude(x => x.ToCity)
                 .Include(x => x.Trip)
-                .ThenInclude(x => x.FromCity);
+                .ThenInclude(x => x.FromCity).ToListAsync();
         }
 
-        public Reservation GetReservationById(int reservationId)
+        public async Task<Reservation> GetReservationByIdAsync(int reservationId)
         {
-            return Context.Reservations.Where(x => x.ReservationId == reservationId)
+            return await Context.Reservations.Where(x => x.ReservationId == reservationId)
                 .Include(x => x.User)
                 .Include(x => x.Trip)
                 .ThenInclude(x => x.FromCity)
                 .Include(x => x.Trip)
-                .ThenInclude(x => x.ToCity).FirstOrDefault();
+                .ThenInclude(x => x.ToCity).FirstOrDefaultAsync();
         }
 
-        public async Task DeleteAsync(Reservation reservation)
+        public async Task DeleteReservationAsync(Reservation reservation)
         {
             Reservation entry = await Context.Reservations.FirstOrDefaultAsync(x => x.ReservationId == reservation.ReservationId);
             Context.Remove(entry);

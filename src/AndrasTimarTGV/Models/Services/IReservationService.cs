@@ -6,12 +6,10 @@ namespace AndrasTimarTGV.Models.Services
 {
     public interface IReservationService
     {
-        IEnumerable<Reservation> Reservations { get; }
-        void SaveReservation(Reservation reservation);
-
-        IEnumerable<Reservation> GetReservationsByUser(AppUser user);
-        Reservation GetReservationsById(int reservationId);
-        Task Delete(AppUser user, int reservationId);
+        Task SaveReservationAsync(Reservation reservation);
+        Task<IEnumerable<Reservation>> GetReservationsByUserAsync(AppUser user);
+        Task<Reservation> GetReservationsById(int reservationId);
+        Task DeleteAsync(AppUser user, int reservationId);
         void ValidateReservationDate(Reservation model);
     }
 }

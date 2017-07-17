@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AndrasTimarTGV.Models.Entities;
 using AndrasTimarTGV.Models.Repositories;
 using AndrasTimarTGV.Util;
@@ -14,25 +15,23 @@ namespace AndrasTimarTGV.Models.Services
         {
             TripRepository = tripRepo;
         }
-
-        public IEnumerable<Trip> Trips => TripRepository.Trips;
-
-        public IEnumerable<Trip> GetTripsByCitIdsAndDate(int fromCityId, int toCityId, DateTime time)
+        
+        public async Task<IEnumerable<Trip>> GetTripsByCitIdsAndDateAsync(int fromCityId, int toCityId, DateTime time)
         {
-            return TripRepository.GetTripsByDateAndCities(fromCityId, toCityId, time);
+            return await TripRepository.GetTripsByDateAndCitiesAsync(fromCityId, toCityId, time);
         }
 
-        public Trip GetTripById(int tripId)
+        public async Task<Trip> GetTripByIdAsync(int tripId)
         {
-            return TripRepository.GetTipById(tripId);
+            return await TripRepository.GetTipByIdAsync(tripId);
         }
 
-        public void UpdateTripSeats(Trip trip)
+        public async Task UpdateTripSeatsAsync(Trip trip)
         {
-            TripRepository.UpdateTripSeats(trip);
+            await TripRepository.UpdateTripSeatsAsync(trip);
         }
 
-        public void DecreaseTripSeatsByReservation(Reservation reservation)
+        public async Task DecreaseTripSeatsByReservationAsync(Reservation reservation)
         {
             if (reservation.TravelClass == TravelClass.Business &&
                 reservation.Trip.FreeBusinessPlaces >= reservation.Seats)
@@ -49,10 +48,10 @@ namespace AndrasTimarTGV.Models.Services
                 throw new NotEnoughSeatsException("Not enough seats left for your reservation");
             }
 
-            UpdateTripSeats(reservation.Trip);
+            await UpdateTripSeatsAsync(reservation.Trip);
         }
 
-        public void IncreaseTripSeatsByReservation(Reservation reservation)
+        public async Task IncreaseTripSeatsByReservationAsync(Reservation reservation)
         {
             if (reservation.TravelClass == TravelClass.Business &&
                 reservation.Trip.FreeBusinessPlaces >= reservation.Seats)
@@ -69,7 +68,7 @@ namespace AndrasTimarTGV.Models.Services
                 throw new NotEnoughSeatsException("Not enough seats left for your reservation");
             }
 
-            UpdateTripSeats(reservation.Trip);
+            await UpdateTripSeatsAsync(reservation.Trip);
         }
     }
 }

@@ -21,29 +21,27 @@ namespace AndrasTimarTGV.Models.Services
             EmailService = emailService;
         }
 
-        public IEnumerable<Reservation> Reservations => ReservationRepository.Reservations;
-
-        public void SaveReservation(Reservation reservation)
+        public async Task SaveReservationAsync(Reservation reservation)
         {
             ValidateReservationDate(reservation);
-            TripService.DecreaseTripSeatsByReservation(reservation);
-            ReservationRepository.SaveReservation(reservation);
+            await TripService.DecreaseTripSeatsByReservationAsync(reservation);
+            await ReservationRepository.SaveReservationAsync(reservation);
             EmailService.SendMail(reservation);
         }
 
-        public IEnumerable<Reservation> GetReservationsByUser(AppUser user)
+        public async Task<IEnumerable<Reservation>> GetReservationsByUserAsync(AppUser user)
         {
-            return ReservationRepository.GetReservationByUserId(user.Id);
+            return await ReservationRepository.GetReservationByUserIdAsync(user.Id);
         }
 
-        public Reservation GetReservationsById(int reservationId)
+        public async Task<Reservation> GetReservationsById(int reservationId)
         {
-            return ReservationRepository.GetReservationById(reservationId);
+            return await ReservationRepository.GetReservationByIdAsync(reservationId);
         }
 
-        public async Task Delete(AppUser user, int reservationId)
+        public async Task DeleteAsync(AppUser user, int reservationId)
         {
-            Reservation reservation = ReservationRepository.GetReservationById(reservationId);
+            Reservation reservation = await ReservationRepository.GetReservationByIdAsync(reservationId);
 
             if (reservation != null)
             {
@@ -59,9 +57,11 @@ namespace AndrasTimarTGV.Models.Services
                     throw new ReservationOutOfTimeframeException("Reservations can not be deleted in the last 3 days!");
                 }
 
-                TripService.IncreaseTripSeatsByReservation(reservation);
+                var increaseSeatsTask = TripService.IncreaseTripSeatsByReservationAsync(reservation);
 
-                await ReservationRepository.DeleteAsync(reservation);
+                var deleteReservationTask = ReservationRepository.DeleteReservationAsync(reservation);
+
+                await Task.WhenAll(increaseSeatsTask, deleteReservationTask);
             }
             else
             {

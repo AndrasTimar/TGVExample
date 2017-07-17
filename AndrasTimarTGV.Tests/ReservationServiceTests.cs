@@ -41,8 +41,8 @@ namespace AndrasTimarTGV.Tests
             };
 
             ReservationRepoMock = new Mock<IReservationRepository>();
-            ReservationRepoMock.Setup(x => x.GetReservationById(TestReservation.ReservationId))
-                .Returns(TestReservation);
+            ReservationRepoMock.Setup(x => x.GetReservationByIdAsync(TestReservation.ReservationId))
+                .ReturnsAsync(TestReservation);
             TripServiceMock = new Mock<ITripService>();
             EmailServiceMock = new Mock<IEmailService>();
             ReservationService = new ReservationService(ReservationRepoMock.Object, TripServiceMock.Object, EmailServiceMock.Object);
@@ -52,19 +52,19 @@ namespace AndrasTimarTGV.Tests
         public void CanNotDeleteInLastThreeDays()
         {
             TestReservation.Trip.Time = DateTime.Now.AddDays(1);
-            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(async () => await ReservationService.Delete(TestUser, TestReservation.ReservationId),
+            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(async () => await ReservationService.DeleteAsync(TestUser, TestReservation.ReservationId),
                 "Reservations can not be deleted in the last 3 days!");
 
             TestReservation.Trip.Time = DateTime.Now.AddDays(2);
-            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(async () => await ReservationService.Delete(TestUser, TestReservation.ReservationId),
+            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(async () => await ReservationService.DeleteAsync(TestUser, TestReservation.ReservationId),
                 "Reservations can not be deleted in the last 3 days!");
 
             TestReservation.Trip.Time = DateTime.Now.AddDays(3);
-            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(async () => await ReservationService.Delete(TestUser, TestReservation.ReservationId),
+            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(async () => await ReservationService.DeleteAsync(TestUser, TestReservation.ReservationId),
                 "Reservations can not be deleted in the last 3 days!");
 
             TestReservation.Trip.Time = DateTime.Now.AddDays(4);
-            Assert.DoesNotThrowAsync(() => ReservationService.Delete(TestUser, TestReservation.ReservationId));
+            Assert.DoesNotThrowAsync(() => ReservationService.DeleteAsync(TestUser, TestReservation.ReservationId));
         }
 
         [Test]
@@ -80,38 +80,38 @@ namespace AndrasTimarTGV.Tests
                 TravelClass = TravelClass.Business,
             };
 
-            ReservationRepoMock.Setup(x => x.GetReservationById(userTwoReservation.ReservationId))
-                .Returns(userTwoReservation);
+            ReservationRepoMock.Setup(x => x.GetReservationByIdAsync(userTwoReservation.ReservationId))
+                .ReturnsAsync(userTwoReservation);
 
             Assert.ThrowsAsync<InvalidOperationException>(
-                () => ReservationService.Delete(userTwo, TestReservation.ReservationId));
+                () => ReservationService.DeleteAsync(userTwo, TestReservation.ReservationId));
             Assert.ThrowsAsync<InvalidOperationException>(
-                () => ReservationService.Delete(TestUser, userTwoReservation.ReservationId));
-            Assert.DoesNotThrowAsync(() => ReservationService.Delete(TestUser, TestReservation.ReservationId),
+                () => ReservationService.DeleteAsync(TestUser, userTwoReservation.ReservationId));
+            Assert.DoesNotThrowAsync(() => ReservationService.DeleteAsync(TestUser, TestReservation.ReservationId),
                 "Trip does not belong to logged in user");
-            Assert.DoesNotThrowAsync(() => ReservationService.Delete(userTwo, userTwoReservation.ReservationId),
+            Assert.DoesNotThrowAsync(() => ReservationService.DeleteAsync(userTwo, userTwoReservation.ReservationId),
                 "Trip does not belong to logged in user");
         }
 
         [Test]
         public async Task DeletionUpdatesTripSeats()
         {
-            await ReservationService.Delete(TestUser, TestReservation.ReservationId);
+            await ReservationService.DeleteAsync(TestUser, TestReservation.ReservationId);
 
-            TripServiceMock.Verify(x=>x.IncreaseTripSeatsByReservation(TestReservation),Times.Once);       
+            TripServiceMock.Verify(x=>x.IncreaseTripSeatsByReservationAsync(TestReservation),Times.Once);       
         }
 
         [Test]
         public async Task DeletionIsPropagatedToRepo()
         {
-            await ReservationService.Delete(TestUser, TestReservation.ReservationId);
-            ReservationRepoMock.Verify(x => x.DeleteAsync(TestReservation), Times.Once);
+            await ReservationService.DeleteAsync(TestUser, TestReservation.ReservationId);
+            ReservationRepoMock.Verify(x => x.DeleteReservationAsync(TestReservation), Times.Once);
         }
 
         [Test]
         public void CanNotDeleteNonexistentTrip()
         {
-            Assert.ThrowsAsync<InvalidOperationException>(async () => await ReservationService.Delete(TestUser, 9999),
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await ReservationService.DeleteAsync(TestUser, 9999),
                 "Trip does not exist");
         }
 
@@ -125,8 +125,8 @@ namespace AndrasTimarTGV.Tests
             };
             TestReservation.Trip = testTrip;
 
-            Assert.Throws<ReservationOutOfTimeframeException>(
-                () => ReservationService.SaveReservation(TestReservation));
+            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(
+                () => ReservationService.SaveReservationAsync(TestReservation));
         }
         [Test]
         public void CanNotReserveTooEarly()
@@ -135,29 +135,29 @@ namespace AndrasTimarTGV.Tests
                 TripId = 1,
                 Time = DateTime.Now.AddDays(15)
             };
-            TripServiceMock.Setup(x => x.GetTripById(TestReservation.Trip.TripId)).Returns(TestTrip);
+            TripServiceMock.Setup(x => x.GetTripByIdAsync(TestReservation.Trip.TripId)).ReturnsAsync(TestTrip);
             TestReservation.Trip = TestTrip;
-            Assert.Throws<ReservationOutOfTimeframeException>(
-                () => ReservationService.SaveReservation(TestReservation));
+            Assert.ThrowsAsync<ReservationOutOfTimeframeException>(
+                () => ReservationService.SaveReservationAsync(TestReservation));
         }
 
         [Test]
-        public void SaveReservationRemovesTripSeats()
+        public async Task SaveReservationRemovesTripSeats()
         {           
-            ReservationService.SaveReservation(TestReservation);
-            TripServiceMock.Verify(x=>x.DecreaseTripSeatsByReservation(TestReservation), Times.Once);
+            await ReservationService.SaveReservationAsync(TestReservation);
+            TripServiceMock.Verify(x=>x.DecreaseTripSeatsByReservationAsync(TestReservation), Times.Once);
         }
 
         [Test]
-        public void SaveReservationPropagatesToRepo()
+        public async Task SaveReservationPropagatesToRepo()
         {
-            ReservationService.SaveReservation(TestReservation);
-            ReservationRepoMock.Verify(x=>x.SaveReservation(TestReservation));
+            await ReservationService.SaveReservationAsync(TestReservation);
+            ReservationRepoMock.Verify(x=>x.SaveReservationAsync(TestReservation));
         }
 
         [Test]
-        public void SaveReservationSendsEmail() {
-            ReservationService.SaveReservation(TestReservation);
+        public async Task SaveReservationSendsEmail() {
+            await ReservationService.SaveReservationAsync(TestReservation);
             EmailServiceMock.Verify(x => x.SendMail(TestReservation));
         }
     }
